@@ -1,0 +1,4 @@
+version: '3'
+services:
+  phantomjs:
+    image: wernight/phantomjs:latest

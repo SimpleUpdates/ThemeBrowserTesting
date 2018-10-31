@@ -1,0 +1,48 @@
+{
+  "defaults": {
+    "twig": {
+      "su": {
+        "footer": "<span>The SimpleUpdates Footer</span>",
+        "misc": {
+          "privatelabel": "SU"
+        }
+      }
+    },
+    "less": {
+      "@config-headerBlockColor": "black"
+    }
+  },
+  "screens": [
+    {
+      "path": "partial/atom-sitename.html",
+      "scenarios": {
+        "Configured": {
+          "sitename": "My Site"
+        },
+        "Registration Marks": {
+          "sitename": "My Adventist® Church"
+        }
+      }
+    },
+    {
+      "path": "partial/atom-slogan.html",
+      "scenarios": {
+        "Configured": {
+          "slogan": "A very nice place to visit"
+        },
+        "Registration Marks": {
+          "slogan": "My Adventist® Church"
+        }
+      }
+    },
+    {
+      "path": "layout/home.html",
+      "scenarios": {
+        "Configured": {
+          "hero": "<h1>Hello World</h1>",
+          "su.editable.region": "<p>Dummy Content</p>"
+        }
+      }
+    }
+  ]
+}

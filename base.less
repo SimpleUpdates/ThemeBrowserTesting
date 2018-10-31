@@ -1,0 +1,37 @@
+//.theme-image-fit(@which; @width; @height;) {
+//  @unitless-width: unit(@width);
+//  @unitless-height: unit(@height);
+//  background-image: url("@{config-@{which}-url}&fit=max&w=@{unitless-width}&h=@{unitless-height}");
+//  background-size: @width @height;
+//}
+//.theme-image-fill(@which; @width; @height;) {
+//  @unitless-width: unit(@width);
+//  @unitless-height: unit(@height);
+//  background-image: url("@{config-@{which}-url}&fit=crop-@{config-@{which}-focalpoint-x}-@{config-@{which}-focalpoint-y}&w=@{unitless-width}&h=@{unitless-height}");
+//  background-size: @width @height;
+//}
+//.theme-image-ratio(@which; @width; @height;) {
+//  @unitless-width: unit(@width);
+//  @unitless-height: unit(@height);
+//  background-image: url("@{config-@{which}-url}&fit=ratio-@{config-@{which}-focalpoint-x}-@{config-@{which}-focalpoint-y}&w=@{unitless-width}&h=@{unitless-height}");
+//  background-size: @width @height;
+//}
+
+.theme-image-fit(@which; @width; @height;) {
+  @unitless-width: unit(@width);
+  @unitless-height: unit(@height);
+  background-image: url("https://picsum.photos/@{unitless-width}/@{unitless-height}");
+  background-size: @width @height;
+}
+.theme-image-fill(@which; @width; @height;) {
+  @unitless-width: unit(@width);
+  @unitless-height: unit(@height);
+  background-image: url("https://picsum.photos/@{unitless-width}/@{unitless-height}");
+  background-size: @width @height;
+}
+.theme-image-ratio(@which; @width; @height;) {
+  @unitless-width: unit(@width);
+  @unitless-height: unit(@height);
+  background-image: url("https://picsum.photos/@{unitless-width}/@{unitless-height}");
+  background-size: @width @height;
+}

@@ -1,0 +1,27 @@
+{
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/SimpleUpdates/less.php"
+    }
+  ],
+  "require": {
+    "oyejorge/less.php": "dev-SUTweaks#73c4e77b01cad1921b7139c233d453befd69dd9e",
+    "twig/twig": "^2.5",
+    "phpunit/phpunit": "^7.4",
+    "ext-json": "*",
+    "ext-readline": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "ThemeViz\\": [
+        "class/",
+        "test/",
+        "test/stubs/"
+      ]
+    }
+  },
+  "scripts": {
+    "test": "./vendor/bin/phpunit --configuration phpunit.xml"
+  }
+}
