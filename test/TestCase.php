@@ -25,9 +25,9 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         define("THEMEVIZ_BASE_PATH", dirname(__DIR__));
         define("THEMEVIZ_THEME_PATH", $this->themePath);
 
-        $this->mockFilesystem = new StubFilesystem();
-        $this->mockLess = new StubLess();
-        $this->mockTwig = new StubTwig();
+        $this->mockFilesystem = new StubFilesystem($this);
+        $this->mockLess = new StubLess($this);
+        $this->mockTwig = new StubTwig($this);
 
         $this->factory = new Factory(
             $this->mockFilesystem,

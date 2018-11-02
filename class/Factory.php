@@ -29,7 +29,20 @@ class Factory
             "Renderer",
             $this->getFilesystem(),
             $this->getLess(),
+            $this->getLessCompiler(),
             $this->getTwig()
+        );
+    }
+
+    /**
+     * @return LessCompiler
+     */
+    public function getLessCompiler()
+    {
+        return $this->getObject(
+            "LessCompiler",
+            $this->getFilesystem(),
+            $this->getLess()
         );
     }
 

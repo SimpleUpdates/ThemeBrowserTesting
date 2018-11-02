@@ -8,7 +8,7 @@ final class TestRenderer extends ThemeViz\TestCase
     /**
      * @param $configFile
      */
-    private $minimalConfig = [
+    private $minimalComponentsFile = [
         "screens" => [
             [
                 "path" => "path/to/file.twig",
@@ -26,34 +26,41 @@ final class TestRenderer extends ThemeViz\TestCase
         $this->renderer = $this->factory->getRenderer();
     }
 
-    /**
-     * @param $needle
-     */
-    private function assertAnyPersistedFileContains($needle): void
+    private function loadMinimalComponentsFile(): void
     {
-        $this->assertTrue($this->mockFilesystem->doCallsContain("fileForceContents", $needle));
+        $this->loadComponentsFileFromArrays($this->minimalComponentsFile);
     }
 
-    public function loadConfigFile($configFile): void
+    public function loadComponentsFileFromFilesystem($filename): void
     {
-        $this->mockFilesystem->setReturnValue(
-            "getFile",
-            file_get_contents(__DIR__ . "/{$configFile}")
-        );
-    }
-
-    private function loadMinimalConfig(): void
-    {
-        $this->loadConfig($this->minimalConfig);
+        $this->mockFilesystem->setMappedReturnValues("getFile", [
+            [THEMEVIZ_THEME_PATH . "/components.json", file_get_contents(__DIR__ . "/{$filename}")]
+        ]);
     }
 
     /**
-     * @param $config
+     * @param $themeConf
      */
-    private function loadConfig($config): void
+    private function loadThemeConf($themeConf): void
     {
-        $this->mockFilesystem->setReturnValue("getFile", json_encode($config));
+        $themeConfJson = json_encode($themeConf);
+
+        $this->mockFilesystem->setMappedReturnValues("getFile", [
+            [THEMEVIZ_THEME_PATH . "/theme.conf", $themeConfJson]
+        ]);
     }
+
+    /**
+     * @param $arrayData
+     */
+    private function loadComponentsFileFromArrays($arrayData): void
+    {
+        $this->mockFilesystem->setMappedReturnValues("getFile", [
+            [THEMEVIZ_THEME_PATH . "/components.json", json_encode($arrayData)]
+        ]);
+    }
+
+
 
     public function testRetrievesConfigFile()
     {
@@ -67,26 +74,22 @@ final class TestRenderer extends ThemeViz\TestCase
 
     public function testRendersScreens()
     {
-        $this->loadConfigFile("testComponentsFile1.json");
+        $this->loadComponentsFileFromFilesystem("testComponentsFile1.json");
 
         $this->renderer->compile();
 
-        $this->assertTrue($this->mockTwig->wasMethodCalledWith(
-            "render",
-            "partial/atom-sitename.html",
-            [
-                "sitename" => "My Site",
-                "su" => [
-                    "footer" => "<span>The SimpleUpdates Footer</span>",
-                    "misc" => ["privatelabel" => "SU"]
-                ]
-            ]
-        ));
+        $callback = function ($carry, $call) {
+            $templateFile = $call[0];
+
+            return $carry || $templateFile === "component.twig";
+        };
+
+        $this->mockTwig->assertAnyCallMatches("renderFile", $callback);
     }
 
     public function testRendersGlobalLess()
     {
-        $this->loadMinimalConfig();
+        $this->loadMinimalComponentsFile();
 
         $this->renderer->compile();
 
@@ -101,42 +104,30 @@ final class TestRenderer extends ThemeViz\TestCase
 
     public function testGetsCss()
     {
-        $this->loadMinimalConfig();
+        $this->loadMinimalComponentsFile();
 
         $this->renderer->compile();
 
         $this->assertTrue($this->mockLess->wasMethodCalled("getCss"));
     }
 
-    public function testLoadsDefaultLessVariables()
-    {
-        $this->loadConfigFile("testComponentsFile1.json");
-
-        $this->renderer->compile();
-
-        $this->assertTrue($this->mockLess->doCallsContain(
-            "parse",
-            "@config-headerBlockColor: black;"
-        ));
-    }
-
     public function testLoadsBaseLess()
     {
-        $this->loadConfigFile("testComponentsFile1.json");
+        $this->loadComponentsFileFromFilesystem("testComponentsFile1.json");
 
         $this->renderer->compile();
 
         $this->assertTrue($this->mockFilesystem->wasMethodCalledWith(
             "getFile",
-            THEMEVIZ_BASE_PATH . "/base.less"
+            THEMEVIZ_BASE_PATH . "/view/base.less"
         ));
     }
 
     public function testParsesBaseLess()
     {
-        $this->loadMinimalConfig();
+        $this->loadMinimalComponentsFile();
 
-        $this->mockFilesystem->setReturnValueAt(1, "getFile", "base_less");
+        $this->mockFilesystem->setReturnValue("getFile", "base_less");
 
         $this->renderer->compile();
 
@@ -167,74 +158,154 @@ final class TestRenderer extends ThemeViz\TestCase
 
     public function testSavesRenderedTemplates()
     {
-        $this->loadMinimalConfig();
+        $this->loadMinimalComponentsFile();
 
-        $this->mockTwig->setReturnValue("render", "rendered_layout");
+        $this->mockTwig->setReturnValue("renderFile", "rendered_layout");
 
         $this->renderer->compile();
 
         $this->assertTrue($this->mockFilesystem->wasMethodCalledWith(
             "fileForceContents",
             THEMEVIZ_BASE_PATH . "/build/path/to/file--ScenarioName.twig",
-            "<style></style><div class=''>rendered_layout</div>"
+            "rendered_layout"
         ));
     }
 
     public function testDeletesBuildFolder()
     {
-        $this->loadMinimalConfig();
+        $this->loadMinimalComponentsFile();
 
         $this->mockTwig->setReturnValue("render", "rendered_layout");
 
         $this->renderer->compile();
 
-        $this->assertTrue($this->mockFilesystem->wasMethodCalledWith(
+        $this->mockFilesystem->assertMethodCalledWith(
             "deleteTree",
             THEMEVIZ_BASE_PATH . "/build"
-        ));
+        );
     }
 
     public function testDoesNotDeleteBuildFolderIfNoScenariosToPersist()
     {
         $this->renderer->compile();
 
-        $this->assertFalse($this->mockFilesystem->wasMethodCalled("deleteTree"));
+        $this->mockFilesystem->assertMethodNotCalled("deleteTree");
     }
 
-    public function testIncludesStyleTags()
+    public function testGetsThemeConf()
     {
-        $this->loadMinimalConfig();
-
-        $this->mockTwig->setReturnValue("render", "rendered_layout");
+        $this->loadMinimalComponentsFile();
 
         $this->renderer->compile();
 
-        $this->assertAnyPersistedFileContains("<style>");
+        $this->mockFilesystem->assertMethodCalledWith("getFile", $this->themePath . "/theme.conf");
     }
 
-    public function testOutputsCss()
+    public function testLoadsThemeConfColors()
     {
-        $this->loadMinimalConfig();
+        $this->loadComponentsFileFromFilesystem("testComponentsFile1.json");
 
-        $this->mockTwig->setReturnValue("render", "rendered_layout");
-
-        $this->mockLess->setReturnValue("getCss","compiled_less");
+        $this->loadThemeConf([
+            "config" => [
+                "headerBlockColor" => [
+                    "title" => "Header Background Color",
+                    "type" => "color",
+                    "value" => "#525252"
+                ]
+            ]
+        ]);
 
         $this->renderer->compile();
 
-        $this->assertAnyPersistedFileContains("compiled_less");
+        $this->mockLess->assertCallsContain(
+            "parse",
+            "@config-headerBlockColor: #525252;"
+        );
     }
 
-    public function testOutputsWrapperClasses()
+    public function testLoadsThemeConfImages()
     {
-        $config = $this->minimalConfig;
-        $config["wrapperClasses"] = ["su_bootstrap_safe"];
-        $this->loadConfig($config);
+        $this->loadComponentsFileFromFilesystem("testComponentsFile1.json");
 
-        $this->mockTwig->setReturnValue("render", "rendered_layout");
+        $this->loadThemeConf([
+            "config" => [
+                "headlineHomeBgImage" => [
+                    "title" => "Default Home - home page alternative to Carousel using the featured image option",
+                    "type" => "image",
+                    "value" => "{{ su.misc.privatelabel }}/hero_image.jpg"
+                ]
+            ]
+        ]);
 
         $this->renderer->compile();
 
-        $this->assertAnyPersistedFileContains("<div class='su_bootstrap_safe'>");
+        $this->mockLess->assertCallsContain(
+            "parse",
+            "@config-headlineHomeBgImage: '".THEMEVIZ_THEME_PATH."/asset/su/hero_image.jpg';"
+        );
+    }
+
+    public function testLoadsThemeConfMultipleTypeProperties()
+    {
+        $this->loadComponentsFileFromFilesystem("testComponentsFile1.json");
+
+        $this->loadThemeConf([
+            "config" => [
+                "headerAlignment" => [
+                    "title" => "Header alignment",
+                    "type" => "multiple",
+                    "required" => true,
+                    "options" => [
+                        "Left",
+                        "Center"
+                    ],
+                    "value" => "Center"
+                ]
+            ]
+        ]);
+
+        $this->renderer->compile();
+
+        $this->mockLess->assertCallsContain(
+            "parse",
+            "@config-headerAlignment: Center;"
+        );
+    }
+
+    public function testLoadsBootstrap()
+    {
+        $this->loadMinimalComponentsFile();
+
+        $this->loadThemeConf([
+            "depends" => [
+                "settings" => [
+                    "global_bootstrap" => true
+                ]
+            ]
+        ]);
+
+        $this->renderer->compile();
+
+        $this->mockTwig->assertAnyCallMatches("renderFile", function ($carry, $call) {
+            $data = $call[1];
+            $useBootstrap = $data["themeviz_use_bootstrap"] ?? FALSE;
+
+            return $carry || $useBootstrap;
+        });
+    }
+
+    public function testSendsCssWithTwigData()
+    {
+        $this->loadMinimalComponentsFile();
+
+        $this->mockLess->setReturnValue("getCss", "compiled_css");
+
+        $this->renderer->compile();
+
+        $this->mockTwig->assertAnyCallMatches("renderFile", function($carry, $call) {
+           $data = $call[1];
+
+           return $carry || $data["themeviz_css"] === "compiled_css";
+        });
     }
 }

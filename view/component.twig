@@ -1,0 +1,12 @@
+<html class="{% if themeviz_use_bootstrap %}su_bootstrap_safe {% endif %}{{ themeviz_wrapper_classes }}">
+<head>
+    {% if themeviz_use_bootstrap %}
+        <link rel="stylesheet" href="{{ themeviz_base_path }}/third-party/bootstrap-3.3.5/dist/css/bootstrap.min.css">
+        <script src="{{ themeviz_base_path }}/third-party/bootstrap-3.3.5/dist/js/bootstrap.min.js"></script>
+    {% endif %}
+    <style>{{ themeviz_css|raw }}</style>
+</head>
+<body class="{% if themeviz_use_bootstrap %}su_bootstrap_safe {% endif %}{{ themeviz_wrapper_classes }}">
+{% include themeviz_component_path %}
+</body>
+</html>

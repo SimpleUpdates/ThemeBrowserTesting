@@ -4,22 +4,28 @@ namespace ThemeViz;
 
 class Twig
 {
+    private $twigOptions;
+    private $filesystemLoader;
     private $twig;
 
     public function __construct()
     {
-        $loader = new \Twig_Loader_Filesystem([
-            THEMEVIZ_THEME_PATH,
-            THEMEVIZ_THEME_PATH . "/partial",
-            THEMEVIZ_THEME_PATH . "/layout"
+        $this->twigOptions = ["debug" => TRUE];
+
+        $this->filesystemLoader = new \Twig_Loader_Filesystem([
+            THEMEVIZ_BASE_PATH . "/view",
+            THEMEVIZ_THEME_PATH
         ]);
 
-        $this->twig = new \Twig_Environment($loader, ["debug" => TRUE]);
+        $this->twig = new \Twig_Environment($this->filesystemLoader, $this->twigOptions);
     }
 
-    public function render($templateFile, $data = [])
+    public function renderFile($templateFile, $data = [])
     {
         $template = $this->twig->load($templateFile);
+
+        $data["themeviz_theme_path"] = THEMEVIZ_THEME_PATH;
+        $data["themeviz_base_path"] = THEMEVIZ_BASE_PATH;
 
         return $template->render($data);
     }

@@ -7,9 +7,6 @@
           "privatelabel": "SU"
         }
       }
-    },
-    "less": {
-      "@config-headerBlockColor": "black"
     }
   },
   "screens": [
