@@ -1,4 +1,7 @@
 version: '3'
 services:
-  phantomjs:
-    image: wernight/phantomjs:latest
+  app:
+    build:
+      context: .
+    volumes:
+      - "./build:/app/build"
