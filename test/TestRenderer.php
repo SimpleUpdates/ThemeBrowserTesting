@@ -147,7 +147,7 @@ final class TestRenderer extends ThemeViz\TestCase
 
         $this->assertTrue($this->mockFilesystem->wasMethodCalledWith(
             "fileForceContents",
-            THEMEVIZ_BASE_PATH . "/build/path/to/file--ScenarioName.twig",
+            THEMEVIZ_BASE_PATH . "/build/ref/path/to/file--ScenarioName.twig",
             "rendered_layout"
         ));
     }

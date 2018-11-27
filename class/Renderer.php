@@ -76,7 +76,7 @@ class Renderer
         $filename = $pathParts["filename"];
         $extension = $pathParts["extension"];
 
-        return THEMEVIZ_BASE_PATH . "/build/$directory/$filename--$scenarioName.$extension";
+        return THEMEVIZ_BASE_PATH . "/build/ref/$directory/$filename--$scenarioName.$extension";
     }
 
     /**

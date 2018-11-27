@@ -22,10 +22,6 @@ RUN wget --no-verbose -O /tmp/firefox.tar.bz2 $FIREFOX_DOWNLOAD_URL && \
     rm /tmp/firefox.tar.bz2 && \
     ln -fs /opt/firefox/firefox /usr/bin/firefox
 
-COPY . /app/
-
-RUN chmod +x /app/app.php
-
 CMD bash
 
 ENTRYPOINT ["/app/app.php", "/theme"]
