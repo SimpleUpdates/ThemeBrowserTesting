@@ -137,25 +137,6 @@ final class TestRenderer extends ThemeViz\TestCase
         ));
     }
 
-    public function testGetIcon()
-    {
-        $result = $this->renderer->getIcon("icon-name");
-
-        $this->assertContains("icon-name", $result);
-    }
-
-    public function testRegistersGetIconFunction()
-    {
-        $this->renderer->compile();
-
-        $this->assertTrue($this->mockTwig->wasMethodCalledWith(
-            "registerFunction",
-            "getIcon",
-            [$this->renderer, "getIcon"],
-            ["is_safe" => ["html"]]
-        ));
-    }
-
     public function testSavesRenderedTemplates()
     {
         $this->loadMinimalComponentsFile();
@@ -307,5 +288,16 @@ final class TestRenderer extends ThemeViz\TestCase
 
            return $carry || $data["themeviz_css"] === "compiled_css";
         });
+    }
+
+    public function testCreatesShotsFolder()
+    {
+        $this->loadMinimalComponentsFile();
+
+        $this->renderer->compile();
+
+        $this->mockFilesystem->assertMethodCalledWith(
+            "makeTree", THEMEVIZ_BASE_PATH . "/build/ref/shots"
+        );
     }
 }

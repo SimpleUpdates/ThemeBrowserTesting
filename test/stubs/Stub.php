@@ -152,9 +152,13 @@ trait Stub
      */
     public function assertMethodCalledWith(string $method, ...$args)
     {
+        $argsExport = var_export($args, TRUE);
+        $haystackExport = var_export($this->getCalls($method), TRUE);
+        $message = "Failed asserting that '$method' was called with args $argsExport\r\n\r\nHaystack:\r\n$haystackExport";
+
         $this->testCase->assertTrue(
             $this->wasMethodCalledWith($method, ...$args),
-            "Failed asserting that '$method' was called with args " . var_export($args, TRUE)
+            $message
         );
     }
 
@@ -172,7 +176,9 @@ trait Stub
     {
         $calls = $this->getCalls($method);
         $bool = array_reduce($calls, $callable, FALSE);
-        $this->testCase->assertTrue($bool);
+        $haystackExport = var_export($calls, TRUE);
+        $message = "Failed asserting any call matches callback.\r\n\r\nHaystack:\r\n$haystackExport";
+        $this->testCase->assertTrue($bool, $message);
     }
 
     /**

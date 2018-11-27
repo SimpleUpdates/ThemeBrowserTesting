@@ -17,11 +17,26 @@ class Filesystem
     public function fileForceContents($path, $contents)
     {
         $parts = explode('/', $path);
-        $file = array_pop($parts);
-        $dir = '';
+        array_pop($parts);
+        $dir = implode("/", $parts);
+        $this->makeTree($dir);
+        file_put_contents($path, $contents);
+    }
+
+    /**
+     * @param $path
+     */
+    public function makeTree($path)
+    {
+        $parts = explode("/", $path);
+        $dir = "";
         foreach ($parts as $part) {
-            if (!is_dir($dir .= "/$part")) mkdir($dir);
+            if (!is_dir($dir .= "/$part")) $this->makeDir($dir);
         }
-        file_put_contents("$dir/$file", $contents);
+    }
+
+    public function makeDir($path)
+    {
+        mkdir($path);
     }
 }

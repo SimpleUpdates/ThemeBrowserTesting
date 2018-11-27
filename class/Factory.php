@@ -28,7 +28,17 @@ class Factory
         return $this->getObject(
             "Renderer",
             $this->getFilesystem(),
-            $this->getLess(),
+            $this->getTwigCompiler()
+        );
+    }
+
+    /**
+     * @return TwigCompiler
+     */
+    public function getTwigCompiler()
+    {
+        return $this->getObject(
+            "TwigCompiler",
             $this->getLessCompiler(),
             $this->getTwig()
         );
