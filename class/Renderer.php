@@ -41,11 +41,20 @@ class Renderer
 
         $this->filesystem->deleteTree(THEMEVIZ_BASE_PATH . "/build");
 
-        $this->scenarioStorage->persistScenarios($components);
+        $this->makeBuild("ref", $components);
+    }
 
-        $componentsPath = THEMEVIZ_BASE_PATH . "/build/ref/html";
-        $photoFolder = THEMEVIZ_BASE_PATH . "/build/ref/shots";
-        $this->photographer->photographComponents($componentsPath, $photoFolder);
+    /**
+     * @param $buildName
+     * @param $components
+     */
+    private function makeBuild($buildName, $components): void
+    {
+        $componentFolder = THEMEVIZ_BASE_PATH . "/build/$buildName/html";
+        $photoFolder = THEMEVIZ_BASE_PATH . "/build/$buildName/shots";
+
+        $this->scenarioStorage->persistScenarios($components, $componentFolder);
+        $this->photographer->photographComponents($componentFolder, $photoFolder);
     }
 
     /**

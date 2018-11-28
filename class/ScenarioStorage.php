@@ -7,6 +7,8 @@ class ScenarioStorage
     /** @var Filesystem $filesystem */
     private $filesystem;
 
+    private $folder;
+
     public function __construct(
         Filesystem $filesystem
     )
@@ -16,9 +18,12 @@ class ScenarioStorage
 
     /**
      * @param $templates
+     * @param $folder
      */
-    public function persistScenarios($templates): void
+    public function persistScenarios($templates, $folder): void
     {
+        $this->folder = $folder;
+
         array_map(function ($key) use ($templates) {
             $scenarios = $templates[$key];
             $templatePath = $key;
@@ -54,6 +59,6 @@ class ScenarioStorage
         $filename = $pathParts["filename"];
         $extension = $pathParts["extension"];
 
-        return THEMEVIZ_BASE_PATH . "/build/ref/html/$directory/$filename--$scenarioName.$extension";
+        return "$this->folder/$directory/$filename--$scenarioName.$extension";
     }
 }
