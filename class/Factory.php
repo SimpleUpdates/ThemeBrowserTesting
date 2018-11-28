@@ -10,6 +10,9 @@ class Factory
     /** @var Firefox $firefox */
     private $firefox;
 
+    /** @var Git $git */
+    private $git;
+
     /** @var Less $less */
     private $less;
 
@@ -19,12 +22,14 @@ class Factory
     public function __construct(
         Filesystem $filesystem = null,
         Firefox $firefox = null,
+        Git $git = null,
         Less $less = null,
         Twig $twig = null
     )
     {
         $this->filesystem = $filesystem;
         $this->firefox = $firefox;
+        $this->git = $git;
         $this->less = $less;
         $this->twig = $twig;
     }

@@ -41,7 +41,7 @@ class Renderer
 
         $this->filesystem->deleteTree(THEMEVIZ_BASE_PATH . "/build");
 
-        $this->makeBuild("ref", $components);
+        $this->makeBuild("pull", $components);
     }
 
     /**

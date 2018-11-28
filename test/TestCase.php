@@ -10,6 +10,9 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     /** @var StubFirefox|Firefox */
     protected $mockFirefox;
 
+    /** @var StubGit|Git $mockGit */
+    protected $mockGit;
+
     /** @var StubLess|Less */
     protected $mockLess;
 
@@ -30,12 +33,14 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
         $this->mockFilesystem = new StubFilesystem($this);
         $this->mockFirefox = new StubFirefox($this);
+        $this->mockGit = new StubGit($this);
         $this->mockLess = new StubLess($this);
         $this->mockTwig = new StubTwig($this);
 
         $this->factory = new Factory(
             $this->mockFilesystem,
             $this->mockFirefox,
+            $this->mockGit,
             $this->mockLess,
             $this->mockTwig
         );
