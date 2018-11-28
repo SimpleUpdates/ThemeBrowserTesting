@@ -10,6 +10,9 @@ class Renderer
     /** @var Photographer $photographer */
     private $photographer;
 
+    /** @var ScenarioStorage $scenarioStorage */
+    private $scenarioStorage;
+
     /** @var TwigCompiler $twigCompiler */
     private $twigCompiler;
 
@@ -19,11 +22,13 @@ class Renderer
     public function __construct(
         Filesystem $filesystem,
         Photographer $photographer,
+        ScenarioStorage $scenarioStorage,
         TwigCompiler $twigCompiler
     )
     {
         $this->filesystem = $filesystem;
         $this->photographer = $photographer;
+        $this->scenarioStorage = $scenarioStorage;
         $this->twigCompiler = $twigCompiler;
     }
 
@@ -36,54 +41,11 @@ class Renderer
 
         $this->filesystem->deleteTree(THEMEVIZ_BASE_PATH . "/build");
 
-        $this->persistScenarios($components);
+        $this->scenarioStorage->persistScenarios($components);
 
         $componentsPath = THEMEVIZ_BASE_PATH . "/build/ref/html";
         $photoFolder = THEMEVIZ_BASE_PATH . "/build/ref/shots";
         $this->photographer->photographComponents($componentsPath, $photoFolder);
-    }
-
-    /**
-     * @param $templates
-     */
-    private function persistScenarios($templates): void
-    {
-        array_map(function ($key) use ($templates) {
-            $scenarios = $templates[$key];
-            $templatePath = $key;
-
-            $this->persistTemplateScenarios($templatePath, $scenarios);
-        }, array_keys($templates));
-    }
-
-    /**
-     * @param $templatePath
-     * @param $scenarios
-     */
-    private function persistTemplateScenarios($templatePath, $scenarios): void
-    {
-        array_map(function ($key) use ($templatePath, $scenarios) {
-            $scenarioName = $key;
-            $html = $scenarios[$key];
-            $newPath = $this->generateBuildPath($scenarioName, $templatePath);
-
-            $this->filesystem->fileForceContents($newPath, $html);
-        }, array_keys($scenarios));
-    }
-
-    /**
-     * @param $scenarioName
-     * @param $templatePath
-     * @return string
-     */
-    private function generateBuildPath($scenarioName, $templatePath): string
-    {
-        $pathParts = pathinfo($templatePath);
-        $directory = $pathParts["dirname"];
-        $filename = $pathParts["filename"];
-        $extension = $pathParts["extension"];
-
-        return THEMEVIZ_BASE_PATH . "/build/ref/html/$directory/$filename--$scenarioName.$extension";
     }
 
     /**

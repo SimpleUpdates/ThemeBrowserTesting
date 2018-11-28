@@ -99,7 +99,7 @@ final class TestPhotographer extends ThemeViz\TestCase
             ["dir"]
         );
 
-        $this->mockFilesystem->setREturnValueAt(
+        $this->mockFilesystem->setReturnValueAt(
             0,
             "isDir",
             TRUE

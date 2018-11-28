@@ -38,6 +38,7 @@ class Factory
             "Renderer",
             $this->getFilesystem(),
             $this->getPhotographer(),
+            $this->getScenarioStorage(),
             $this->getTwigCompiler()
         );
     }
@@ -75,6 +76,17 @@ class Factory
             "Photographer",
             $this->getFilesystem(),
             $this->getFirefox()
+        );
+    }
+
+    /**
+     * @return ScenarioStorage
+     */
+    public function getScenarioStorage()
+    {
+        return $this->getObject(
+            "ScenarioStorage",
+            $this->getFilesystem()
         );
     }
 
