@@ -312,4 +312,16 @@ final class TestRenderer extends ThemeViz\TestCase
             THEMEVIZ_BASE_PATH . "/build/pull/html"
         );
     }
+
+    public function testSavesState()
+    {
+        $this->loadMinimalComponentsFile();
+
+        $this->renderer->compile();
+
+        $this->mockGit->assertMethodCalledWith(
+            "saveState",
+            THEMEVIZ_THEME_PATH
+        );
+    }
 }

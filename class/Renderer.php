@@ -7,6 +7,9 @@ class Renderer
     /** @var Filesystem $filesystem */
     private $filesystem;
 
+    /** @var Git $git */
+    private $git;
+
     /** @var Photographer $photographer */
     private $photographer;
 
@@ -21,12 +24,14 @@ class Renderer
 
     public function __construct(
         Filesystem $filesystem,
+        Git $git,
         Photographer $photographer,
         ScenarioStorage $scenarioStorage,
         TwigCompiler $twigCompiler
     )
     {
         $this->filesystem = $filesystem;
+        $this->git = $git;
         $this->photographer = $photographer;
         $this->scenarioStorage = $scenarioStorage;
         $this->twigCompiler = $twigCompiler;
@@ -42,6 +47,8 @@ class Renderer
         $this->filesystem->deleteTree(THEMEVIZ_BASE_PATH . "/build");
 
         $this->makeBuild("pull", $components);
+
+        $this->git->saveState(THEMEVIZ_THEME_PATH);
     }
 
     /**

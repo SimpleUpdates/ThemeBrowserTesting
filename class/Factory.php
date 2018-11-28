@@ -42,6 +42,7 @@ class Factory
         return $this->getObject(
             "Renderer",
             $this->getFilesystem(),
+            $this->getGit(),
             $this->getPhotographer(),
             $this->getScenarioStorage(),
             $this->getTwigCompiler()
@@ -109,6 +110,14 @@ class Factory
     public function getFirefox()
     {
         return $this->getObject("Firefox");
+    }
+
+    /**
+     * @return Git
+     */
+    public function getGit()
+    {
+        return $this->getObject("Git");
     }
 
     /**
