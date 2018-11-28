@@ -147,7 +147,7 @@ final class TestRenderer extends ThemeViz\TestCase
 
         $this->assertTrue($this->mockFilesystem->wasMethodCalledWith(
             "fileForceContents",
-            THEMEVIZ_BASE_PATH . "/build/ref/path/to/file--ScenarioName.twig",
+            THEMEVIZ_BASE_PATH . "/build/ref/html/path/to/file--ScenarioName.twig",
             "rendered_layout"
         ));
     }
@@ -298,6 +298,18 @@ final class TestRenderer extends ThemeViz\TestCase
 
         $this->mockFilesystem->assertMethodCalledWith(
             "makeTree", THEMEVIZ_BASE_PATH . "/build/ref/shots"
+        );
+    }
+
+    public function testPassesCompiledComponentsFolderToPhotographer()
+    {
+        $this->loadMinimalComponentsFile();
+
+        $this->renderer->compile();
+
+        $this->mockFilesystem->assertMethodCalledWith(
+            "scanDir",
+            THEMEVIZ_BASE_PATH . "/build/ref/html"
         );
     }
 }

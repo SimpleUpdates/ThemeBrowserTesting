@@ -7,6 +7,9 @@ class Renderer
     /** @var Filesystem $filesystem */
     private $filesystem;
 
+    /** @var Photographer $photographer */
+    private $photographer;
+
     /** @var TwigCompiler $twigCompiler */
     private $twigCompiler;
 
@@ -15,10 +18,12 @@ class Renderer
 
     public function __construct(
         Filesystem $filesystem,
+        Photographer $photographer,
         TwigCompiler $twigCompiler
     )
     {
         $this->filesystem = $filesystem;
+        $this->photographer = $photographer;
         $this->twigCompiler = $twigCompiler;
     }
 
@@ -31,9 +36,11 @@ class Renderer
 
         $this->filesystem->deleteTree(THEMEVIZ_BASE_PATH . "/build");
 
-        $this->filesystem->makeTree(THEMEVIZ_BASE_PATH . "/build/ref/shots");
-
         $this->persistScenarios($components);
+
+        $componentsPath = THEMEVIZ_BASE_PATH . "/build/ref/html";
+        $photoFolder = THEMEVIZ_BASE_PATH . "/build/ref/shots";
+        $this->photographer->photographComponents($componentsPath, $photoFolder);
     }
 
     /**
@@ -76,7 +83,7 @@ class Renderer
         $filename = $pathParts["filename"];
         $extension = $pathParts["extension"];
 
-        return THEMEVIZ_BASE_PATH . "/build/ref/$directory/$filename--$scenarioName.$extension";
+        return THEMEVIZ_BASE_PATH . "/build/ref/html/$directory/$filename--$scenarioName.$extension";
     }
 
     /**

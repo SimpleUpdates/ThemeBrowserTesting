@@ -7,6 +7,9 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     /** @var StubFilesystem|Filesystem */
     protected $mockFilesystem;
 
+    /** @var StubFirefox|Firefox */
+    protected $mockFirefox;
+
     /** @var StubLess|Less */
     protected $mockLess;
 
@@ -26,11 +29,13 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         define("THEMEVIZ_THEME_PATH", $this->themePath);
 
         $this->mockFilesystem = new StubFilesystem($this);
+        $this->mockFirefox = new StubFirefox($this);
         $this->mockLess = new StubLess($this);
         $this->mockTwig = new StubTwig($this);
 
         $this->factory = new Factory(
             $this->mockFilesystem,
+            $this->mockFirefox,
             $this->mockLess,
             $this->mockTwig
         );

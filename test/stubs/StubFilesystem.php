@@ -25,4 +25,14 @@ class StubFilesystem extends Filesystem
     {
         return $this->handleCall(__FUNCTION__, func_get_args());
     }
+
+    public function scanDir($path)
+    {
+        return $this->handleCall(__FUNCTION__, func_get_args());
+    }
+
+    public function isDir($path)
+    {
+        return $this->handleCall(__FUNCTION__, func_get_args());
+    }
 }

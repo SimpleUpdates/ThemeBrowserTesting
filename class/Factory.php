@@ -7,15 +7,24 @@ class Factory
     /** @var Filesystem $filesystem */
     private $filesystem;
 
+    /** @var Firefox $firefox */
+    private $firefox;
+
     /** @var Less $less */
     private $less;
 
     /** @var Twig $twig */
     private $twig;
 
-    public function __construct(Filesystem $filesystem = null, Less $less = null, Twig $twig = null)
+    public function __construct(
+        Filesystem $filesystem = null,
+        Firefox $firefox = null,
+        Less $less = null,
+        Twig $twig = null
+    )
     {
         $this->filesystem = $filesystem;
+        $this->firefox = $firefox;
         $this->less = $less;
         $this->twig = $twig;
     }
@@ -28,6 +37,7 @@ class Factory
         return $this->getObject(
             "Renderer",
             $this->getFilesystem(),
+            $this->getPhotographer(),
             $this->getTwigCompiler()
         );
     }
@@ -57,11 +67,31 @@ class Factory
     }
 
     /**
+     * @return Photographer
+     */
+    public function getPhotographer()
+    {
+        return $this->getObject(
+            "Photographer",
+            $this->getFilesystem(),
+            $this->getFirefox()
+        );
+    }
+
+    /**
      * @return Filesystem
      */
     public function getFilesystem()
     {
         return $this->getObject("Filesystem");
+    }
+
+    /**
+     * @return Firefox
+     */
+    public function getFirefox()
+    {
+        return $this->getObject("Firefox");
     }
 
     /**

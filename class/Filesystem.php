@@ -39,4 +39,14 @@ class Filesystem
     {
         mkdir($path);
     }
+
+    public function scanDir($path)
+    {
+        return scandir($path);
+    }
+
+    public function isDir($path)
+    {
+        return is_dir($path);
+    }
 }
