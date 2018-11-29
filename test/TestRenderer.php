@@ -348,15 +348,6 @@ final class TestRenderer extends ThemeViz\TestCase
         $this->mockGit->assertMethodNotCalled("checkoutRemoteBranch");
     }
 
-    public function testRendersComponentsTwice()
-    {
-        $this->loadMinimalComponentsFile();
-
-        $this->renderer->compile();
-
-        $this->mockTwig->assertCallCount("renderFile", 2);
-    }
-
     public function testMakesDiffs()
     {
         $this->loadMinimalComponentsFile();
@@ -366,5 +357,18 @@ final class TestRenderer extends ThemeViz\TestCase
         $this->renderer->compile();
 
         $this->mockPixelmatch->assertMethodCalled("makeDiff");
+    }
+
+    public function testCompilesSummaryPage()
+    {
+        $this->loadMinimalComponentsFile();
+
+        $this->mockFilesystem->setReturnValue("scanDir", ["component"]);
+
+        $this->renderer->compile();
+
+        $this->mockTwig->assertAnyCallMatches("renderFile", function($carry, $args) {
+            return $args[0] === "summary.twig" || $carry;
+        });
     }
 }

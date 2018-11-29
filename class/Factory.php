@@ -51,6 +51,7 @@ class Factory
             $this->getGit(),
             $this->getPhotographer(),
             $this->getScenarioStorage(),
+            $this->getSummaryCompiler(),
             $this->getTwigCompiler()
         );
     }
@@ -80,6 +81,18 @@ class Factory
     }
 
     /**
+     * @return Differ
+     */
+    public function getDiffer()
+    {
+        return $this->getObject(
+            "Differ",
+            $this->getFilesystem(),
+            $this->getPixelmatch()
+        );
+    }
+
+    /**
      * @return Photographer
      */
     public function getPhotographer()
@@ -92,14 +105,14 @@ class Factory
     }
 
     /**
-     * @return Differ
+     * @return SummaryCompiler
      */
-    public function getDiffer()
+    public function getSummaryCompiler()
     {
         return $this->getObject(
-            "Differ",
+            "SummaryCompiler",
             $this->getFilesystem(),
-            $this->getPixelmatch()
+            $this->getTwig()
         );
     }
 

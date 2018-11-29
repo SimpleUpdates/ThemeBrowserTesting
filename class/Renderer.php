@@ -19,6 +19,9 @@ class Renderer
     /** @var ScenarioStorage $scenarioStorage */
     private $scenarioStorage;
 
+    /** @var SummaryCompiler $summaryCompiler */
+    private $summaryCompiler;
+
     /** @var TwigCompiler $twigCompiler */
     private $twigCompiler;
 
@@ -31,6 +34,7 @@ class Renderer
         Git $git,
         Photographer $photographer,
         ScenarioStorage $scenarioStorage,
+        SummaryCompiler $summaryCompiler,
         TwigCompiler $twigCompiler
     )
     {
@@ -39,6 +43,7 @@ class Renderer
         $this->git = $git;
         $this->photographer = $photographer;
         $this->scenarioStorage = $scenarioStorage;
+        $this->summaryCompiler = $summaryCompiler;
         $this->twigCompiler = $twigCompiler;
     }
 
@@ -64,11 +69,13 @@ class Renderer
         $this->git->resetState(THEMEVIZ_THEME_PATH);
 
         $this->differ->buildDiffs();
+
+        $this->summaryCompiler->compile();
     }
 
     /**
      * @param $buildName
-     * @param $components
+     * @throws \Less_Exception_Parser
      */
     private function makeBuild($buildName): void
     {

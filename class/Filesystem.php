@@ -42,7 +42,7 @@ class Filesystem
 
     public function scanDir($path)
     {
-        return scandir($path);
+        return array_diff(scandir($path), ["..","."]);
     }
 
     public function isDir($path)

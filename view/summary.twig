@@ -1,0 +1,29 @@
+<html>
+<head>
+    <title>Summary</title>
+    <style>
+        .component {
+        }
+        .component h1 {
+            padding-top: 3rem;
+        }
+        .component img {
+            float: left;
+            width: 30%;
+            margin-right: 2%;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.10.0/css/lightbox.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.10.0/js/lightbox-plus-jquery.min.js"></script>
+</head>
+<body>
+    {% for component in themeviz_components %}
+        <div class="component">
+            <h1>{{ component.name }}</h1>
+            <a href="{{ component.expected }}" data-lightbox="{{ component.name }}"><img src="{{ component.expected }}" alt="Expected"></a>
+            <a href="{{ component.actual }}" data-lightbox="{{ component.name }}"><img src="{{ component.actual }}" alt="Actual"></a>
+            <a href="{{ component.diff }}" data-lightbox="{{ component.name }}"><img src="{{ component.diff }}" alt="Diff"></a>
+        </div>
+    {% endfor %}
+</body>
+</html>
