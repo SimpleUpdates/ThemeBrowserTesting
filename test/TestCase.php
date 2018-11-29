@@ -16,6 +16,9 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     /** @var StubLess|Less */
     protected $mockLess;
 
+    /** @var StubPixelmatch|Pixelmatch */
+    protected $mockPixelmatch;
+
     /** @var StubTwig|Twig */
     protected $mockTwig;
 
@@ -49,6 +52,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         $this->mockFirefox = new StubFirefox($this);
         $this->mockGit = new StubGit($this);
         $this->mockLess = new StubLess($this);
+        $this->mockPixelmatch = new StubPixelmatch($this);
         $this->mockTwig = new StubTwig($this);
 
         $this->factory = new Factory(
@@ -56,6 +60,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             $this->mockFirefox,
             $this->mockGit,
             $this->mockLess,
+            $this->mockPixelmatch,
             $this->mockTwig
         );
     }

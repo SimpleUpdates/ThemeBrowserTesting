@@ -4,6 +4,9 @@ namespace ThemeViz;
 
 class Renderer
 {
+    /** @var Differ $differ */
+    private $differ;
+
     /** @var Filesystem $filesystem */
     private $filesystem;
 
@@ -23,6 +26,7 @@ class Renderer
     private $componentsFile;
 
     public function __construct(
+        Differ $differ,
         Filesystem $filesystem,
         Git $git,
         Photographer $photographer,
@@ -30,6 +34,7 @@ class Renderer
         TwigCompiler $twigCompiler
     )
     {
+        $this->differ = $differ;
         $this->filesystem = $filesystem;
         $this->git = $git;
         $this->photographer = $photographer;
@@ -57,6 +62,8 @@ class Renderer
         $this->makeBuild("production");
 
         $this->git->resetState(THEMEVIZ_THEME_PATH);
+
+        $this->differ->buildDiffs();
     }
 
     /**

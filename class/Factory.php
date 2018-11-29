@@ -16,6 +16,9 @@ class Factory
     /** @var Less $less */
     private $less;
 
+    /** @var Pixelmatch $pixelmatch */
+    private $pixelmatch;
+
     /** @var Twig $twig */
     private $twig;
 
@@ -24,6 +27,7 @@ class Factory
         Firefox $firefox = null,
         Git $git = null,
         Less $less = null,
+        Pixelmatch $pixelmatch = null,
         Twig $twig = null
     )
     {
@@ -31,6 +35,7 @@ class Factory
         $this->firefox = $firefox;
         $this->git = $git;
         $this->less = $less;
+        $this->pixelmatch = $pixelmatch;
         $this->twig = $twig;
     }
 
@@ -41,6 +46,7 @@ class Factory
     {
         return $this->getObject(
             "Renderer",
+            $this->getDiffer(),
             $this->getFilesystem(),
             $this->getGit(),
             $this->getPhotographer(),
@@ -86,6 +92,18 @@ class Factory
     }
 
     /**
+     * @return Differ
+     */
+    public function getDiffer()
+    {
+        return $this->getObject(
+            "Differ",
+            $this->getFilesystem(),
+            $this->getPixelmatch()
+        );
+    }
+
+    /**
      * @return ScenarioStorage
      */
     public function getScenarioStorage()
@@ -126,6 +144,14 @@ class Factory
     public function getLess()
     {
         return $this->getObject("Less");
+    }
+
+    /**
+     * @return Pixelmatch
+     */
+    public function getPixelmatch()
+    {
+        return $this->getObject("Pixelmatch");
     }
 
     /**

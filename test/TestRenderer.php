@@ -356,4 +356,15 @@ final class TestRenderer extends ThemeViz\TestCase
 
         $this->mockTwig->assertCallCount("renderFile", 2);
     }
+
+    public function testMakesDiffs()
+    {
+        $this->loadMinimalComponentsFile();
+
+        $this->mockFilesystem->setReturnValue("scanDir", ["component"]);
+
+        $this->renderer->compile();
+
+        $this->mockPixelmatch->assertMethodCalled("makeDiff");
+    }
 }
