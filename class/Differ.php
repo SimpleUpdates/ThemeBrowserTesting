@@ -25,7 +25,8 @@ class Differ
         $this->filesystem->makeTree(THEMEVIZ_BASE_PATH . "/build/diffs");
         $productionShots = $this->filesystem->scanDir(THEMEVIZ_BASE_PATH . "/build/production/shots");
         $pullShots = $this->filesystem->scanDir(THEMEVIZ_BASE_PATH . "/build/pull/shots");
-        $shotsToDiff = array_intersect($productionShots ?? [], $pullShots ?? []);
+        $commonShots = array_intersect($productionShots ?? [], $pullShots ?? []);
+        $cleanShots = array_diff($commonShots, ["..","."]);
 
         array_map(function ($shot) {
             $this->pixelmatch->makeDiff(
@@ -33,6 +34,6 @@ class Differ
                 THEMEVIZ_BASE_PATH . "/build/pull/shots/$shot",
                 THEMEVIZ_BASE_PATH . "/build/diffs/$shot"
             );
-        }, $shotsToDiff);
+        }, $cleanShots);
     }
 }

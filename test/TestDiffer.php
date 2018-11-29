@@ -67,4 +67,13 @@ final class TestDiffer extends ThemeViz\TestCase
 
         $this->mockPixelmatch->assertCallCount("makeDiff", 1);
     }
+
+    public function testDoesNotDiffDots()
+    {
+        $this->mockFilesystem->setReturnValue("scanDir", [".",".."]);
+
+        $this->differ->buildDiffs();
+
+        $this->mockPixelmatch->assertMethodNotCalled("makeDiff");
+    }
 }
