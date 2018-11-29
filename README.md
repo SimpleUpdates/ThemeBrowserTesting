@@ -1,8 +1,13 @@
 # ThemeBrowserTesting
 
-- Backstop.js
-- Automatically generated and deployed style guides
-- Accessibility testing using a headless browser
+Installation:
+
+Installation:
+
+```bash
+composer install
+chmod +x run.sh
+```
 
 Usage:
 
@@ -21,3 +26,9 @@ Run the app and jump into terminal:
 ```bash
 docker-compose run --entrypoint bash app
 ```
+
+Wish list:
+
+- Backstop.js
+- Automatically generated and deployed style guides
+- Accessibility testing using a headless browser
