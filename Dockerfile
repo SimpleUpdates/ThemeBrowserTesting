@@ -10,6 +10,7 @@ ARG FIREFOX_DOWNLOAD_URL="https://download.mozilla.org/?product=firefox-latest-s
 # ibdbus-glib-1-2 - required for Firefox
 # libgtk-3-0 - required for Firefox
 # libxt6 - required for Firefox
+# openssh-client - required for git to clone submodules
 # software-properties-common - required for NPM install script
 # wget - required to download Firefox
 RUN apt-get update -qqy \
@@ -22,6 +23,7 @@ RUN apt-get update -qqy \
    libdbus-glib-1-2 \
    libgtk-3-0 \
    libxt6 \
+   openssh-client \
    software-properties-common \
    wget
 
