@@ -24,6 +24,20 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
     protected $themePath = "path/to/theme";
 
+    /**
+     * @param $minimalComponentsFile
+     */
+    protected $minimalComponentsFile = [
+        "screens" => [
+            [
+                "path" => "path/to/file.twig",
+                "scenarios" => [
+                    "ScenarioName" => []
+                ]
+            ]
+        ]
+    ];
+
     protected function setUp()
     {
         parent::setUp();
@@ -44,5 +58,20 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             $this->mockLess,
             $this->mockTwig
         );
+    }
+
+    protected function loadMinimalComponentsFile(): void
+    {
+        $this->loadComponentsFileFromArrays($this->minimalComponentsFile);
+    }
+
+    /**
+     * @param $arrayData
+     */
+    private function loadComponentsFileFromArrays($arrayData): void
+    {
+        $this->mockFilesystem->setMappedReturnValues("getFile", [
+            [THEMEVIZ_THEME_PATH . "/components.json", json_encode($arrayData)]
+        ]);
     }
 }

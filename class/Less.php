@@ -8,7 +8,7 @@ class Less
 
     public function __construct()
     {
-        $this->less = new \Less_Parser();
+        $this->resetParser();
     }
 
     /**
@@ -36,5 +36,10 @@ class Less
     public function getCss()
     {
         return $this->less->getCss();
+    }
+
+    public function resetParser()
+    {
+        $this->less = new \Less_Parser();
     }
 }

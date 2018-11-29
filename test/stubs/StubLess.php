@@ -20,4 +20,9 @@ class StubLess extends Less
     {
         return $this->handleCall(__FUNCTION__, func_get_args());
     }
+
+    public function resetParser()
+    {
+        return $this->handleCall(__FUNCTION__, func_get_args());
+    }
 }

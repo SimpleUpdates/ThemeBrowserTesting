@@ -37,26 +37,36 @@ class Renderer
         $this->twigCompiler = $twigCompiler;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function compile()
     {
         $this->themeConfig = $this->getThemeConfig();
         $this->componentsFile = $this->getComponentsFile();
 
-        if (!$components = $this->twigCompiler->compileTwig($this->themeConfig, $this->componentsFile)) return;
-
         $this->filesystem->deleteTree(THEMEVIZ_BASE_PATH . "/build");
 
-        $this->makeBuild("pull", $components);
+        $this->makeBuild("pull");
 
         $this->git->saveState(THEMEVIZ_THEME_PATH);
+        $this->git->checkoutBranch(THEMEVIZ_THEME_PATH, "production") ||
+            $this->git->checkoutRemoteBranch(THEMEVIZ_THEME_PATH, "production");
+        $this->git->pull(THEMEVIZ_THEME_PATH, "production");
+
+        $this->makeBuild("production");
+
+        $this->git->resetState(THEMEVIZ_THEME_PATH);
     }
 
     /**
      * @param $buildName
      * @param $components
      */
-    private function makeBuild($buildName, $components): void
+    private function makeBuild($buildName): void
     {
+        if (!$components = $this->twigCompiler->compileTwig($this->themeConfig, $this->componentsFile)) return;
+
         $componentFolder = THEMEVIZ_BASE_PATH . "/build/$buildName/html";
         $photoFolder = THEMEVIZ_BASE_PATH . "/build/$buildName/shots";
 

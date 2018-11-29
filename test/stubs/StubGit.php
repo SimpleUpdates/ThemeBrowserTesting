@@ -25,4 +25,9 @@ class StubGit extends Git
     {
         return $this->handleCall(__FUNCTION__, func_get_args());
     }
+
+    public function checkoutBranch($path, $branch)
+    {
+        return $this->handleCall(__FUNCTION__, func_get_args());
+    }
 }

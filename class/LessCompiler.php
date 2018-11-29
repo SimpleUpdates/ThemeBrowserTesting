@@ -10,9 +10,6 @@ class LessCompiler
     /** @var Less $less */
     private $less;
 
-    /** @var string $css */
-    private $css = "";
-
     public function __construct(Filesystem $filesystem, Less $less)
     {
         $this->filesystem = $filesystem;
@@ -24,19 +21,18 @@ class LessCompiler
      * @param $componentsFile
      * @return string
      * @throws \Less_Exception_Parser
+     * @throws \Exception
      */
     public function getCss($themeConfig, $componentsFile)
     {
-        if (!$this->css) {
-            $this->parseBaseLess();
-            $this->parseThemeConfigProperties($themeConfig);
-            $this->parseLessDefaults($componentsFile);
-            $this->parseThemeGlobalLess();
+        $this->less->resetParser();
 
-            $this->css = $this->less->getCss();
-        }
+        $this->parseBaseLess();
+        $this->parseThemeConfigProperties($themeConfig);
+        $this->parseLessDefaults($componentsFile);
+        $this->parseThemeGlobalLess();
 
-        return $this->css;
+        return $this->less->getCss();
     }
 
     private function parseLessDefaults($componentsFile): void

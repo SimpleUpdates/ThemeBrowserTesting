@@ -5,30 +5,11 @@ final class TestRenderer extends ThemeViz\TestCase
     /** @var \ThemeViz\Renderer $renderer */
     private $renderer;
 
-    /**
-     * @param $configFile
-     */
-    private $minimalComponentsFile = [
-        "screens" => [
-            [
-                "path" => "path/to/file.twig",
-                "scenarios" => [
-                    "ScenarioName" => []
-                ]
-            ]
-        ]
-    ];
-
     protected function setUp()
     {
         parent::setUp();
 
         $this->renderer = $this->factory->getRenderer();
-    }
-
-    private function loadMinimalComponentsFile(): void
-    {
-        $this->loadComponentsFileFromArrays($this->minimalComponentsFile);
     }
 
     public function loadComponentsFileFromFilesystem($filename): void
@@ -49,18 +30,6 @@ final class TestRenderer extends ThemeViz\TestCase
             [THEMEVIZ_THEME_PATH . "/theme.conf", $themeConfJson]
         ]);
     }
-
-    /**
-     * @param $arrayData
-     */
-    private function loadComponentsFileFromArrays($arrayData): void
-    {
-        $this->mockFilesystem->setMappedReturnValues("getFile", [
-            [THEMEVIZ_THEME_PATH . "/components.json", json_encode($arrayData)]
-        ]);
-    }
-
-
 
     public function testRetrievesConfigFile()
     {
@@ -164,13 +133,6 @@ final class TestRenderer extends ThemeViz\TestCase
             "deleteTree",
             THEMEVIZ_BASE_PATH . "/build"
         );
-    }
-
-    public function testDoesNotDeleteBuildFolderIfNoScenariosToPersist()
-    {
-        $this->renderer->compile();
-
-        $this->mockFilesystem->assertMethodNotCalled("deleteTree");
     }
 
     public function testGetsThemeConf()
@@ -323,5 +285,75 @@ final class TestRenderer extends ThemeViz\TestCase
             "saveState",
             THEMEVIZ_THEME_PATH
         );
+    }
+
+    public function testChecksOutProduction()
+    {
+        $this->loadMinimalComponentsFile();
+
+        $this->renderer->compile();
+
+        $this->mockGit->assertMethodCalledWith(
+            "checkoutRemoteBranch",
+            THEMEVIZ_THEME_PATH,
+            "production"
+        );
+    }
+
+    public function testBuildsProductionBranch()
+    {
+        $this->loadMinimalComponentsFile();
+
+        $this->renderer->compile();
+
+        $this->mockFilesystem->assertMethodCalledWith(
+            "scanDir",
+            THEMEVIZ_BASE_PATH . "/build/production/html"
+        );
+    }
+
+    public function testRestoresGitState()
+    {
+        $this->loadMinimalComponentsFile();
+
+        $this->renderer->compile();
+
+        $this->mockGit->assertMethodCalledWith(
+            "resetState",
+            THEMEVIZ_THEME_PATH
+        );
+    }
+
+    public function testPullsProduction()
+    {
+        $this->loadMinimalComponentsFile();
+
+        $this->renderer->compile();
+
+        $this->mockGit->assertMethodCalledWith(
+            "pull",
+            THEMEVIZ_THEME_PATH,
+            "production"
+        );
+    }
+
+    public function testDoesNotCheckoutRemoteBranchIfLocalBranchAvailable()
+    {
+        $this->loadMinimalComponentsFile();
+
+        $this->mockGit->setReturnValue("checkoutBranch", true);
+
+        $this->renderer->compile();
+
+        $this->mockGit->assertMethodNotCalled("checkoutRemoteBranch");
+    }
+
+    public function testRendersComponentsTwice()
+    {
+        $this->loadMinimalComponentsFile();
+
+        $this->renderer->compile();
+
+        $this->mockTwig->assertCallCount("renderFile", 2);
     }
 }

@@ -208,6 +208,11 @@ trait Stub
         return strpos($haystack, $needle) !== false;
     }
 
+    public function assertCallCount(string $method, int $count)
+    {
+        $this->testCase->assertCount($count, $this->getCalls($method));
+    }
+
     /**
      * @param string $method
      * @return string

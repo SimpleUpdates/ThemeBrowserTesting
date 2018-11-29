@@ -12,22 +12,32 @@ final class TestTwigCompiler extends ThemeViz\TestCase
         $this->twigCompiler = $this->factory->getTwigCompiler();
     }
 
-    public function testGetIcon()
+    public function testExists()
     {
-        $result = $this->twigCompiler->getIcon("icon-name");
-
-        $this->assertContains("icon-name", $result);
+        $this->assertTrue(class_exists("\\ThemeViz\\TwigCompiler"));
     }
 
-    public function testRegistersGetIconFunction()
+    public function testCompilesCssOncePerCompilation()
     {
-        $this->twigCompiler->compileTwig([],[]);
+        $componentsFile = [
+            "screens" => [
+                [
+                    "path" => "path/to/file.twig",
+                    "scenarios" => [
+                        "ScenarioName" => []
+                    ]
+                ],
+                [
+                    "path" => "path/to/file2.twig",
+                    "scenarios" => [
+                        "ScenarioName" => []
+                    ]
+                ]
+            ]
+        ];
 
-        $this->assertTrue($this->mockTwig->wasMethodCalledWith(
-            "registerFunction",
-            "getIcon",
-            [$this->twigCompiler, "getIcon"],
-            ["is_safe" => ["html"]]
-        ));
+        $this->twigCompiler->compileTwig([], $componentsFile);
+
+        $this->mockLess->assertCallCount("getCss", 1);
     }
 }
