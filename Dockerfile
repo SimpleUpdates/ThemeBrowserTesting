@@ -31,7 +31,7 @@ RUN wget --no-verbose -O /tmp/firefox.tar.bz2 $FIREFOX_DOWNLOAD_URL && \
     ln -fs /opt/firefox/firefox /usr/bin/firefox
 
 # https://tecadmin.net/install-latest-nodejs-npm-on-debian/
-ADD install_npm.sh /install_npm.sh
+COPY install_npm.sh /install_npm.sh
 RUN chmod +x ./install_npm.sh && ./install_npm.sh
 RUN apt-get -qqy --no-install-recommends install nodejs
 
@@ -39,6 +39,9 @@ RUN npm install -g pixelmatch
 
 RUN git config --global user.email "nathan@simpleupdates.com"
 RUN git config --global user.name "Nathan Arthur"
+
+# Locally /app is re-mounted as a volume. In CI, a volume is not used.
+COPY . /app
 
 CMD bash
 
