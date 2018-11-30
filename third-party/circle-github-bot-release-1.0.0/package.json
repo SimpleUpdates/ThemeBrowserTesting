@@ -1,0 +1,23 @@
+{
+  "name": "circle-github-bot",
+  "version": "1.0.0",
+  "description": "CircleCI comments on github",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "coffee --compile --output dist src",
+    "check_version": "echo ${npm_package_version} $(npm view ${npm_package_name} version) | awk '{ if ($1 == $2) { print \"Duplicate version\"; exit 1 }}'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/themadcreator/circle-github-bot.git"
+  },
+  "keywords": [
+    "circle",
+    "github",
+    "ops"
+  ],
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "coffee-script": "^1.12.2"
+  }
+}
