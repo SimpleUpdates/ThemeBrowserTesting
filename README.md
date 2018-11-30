@@ -27,13 +27,6 @@ Run the app and jump into terminal:
 docker-compose run --entrypoint bash app
 ```
 
-Updating `circle-github-bot`:
-
-- Download release and extract into `third-party`
-- Run `npm run-script build`
-- Remove `dist` from `circle-github-bot`'s `.gitignore` file.
-- Update `comment.js` to require the `circle-github-bot` folder, if its name has changed.
-
 Wish list:
 
 - Backstop.js

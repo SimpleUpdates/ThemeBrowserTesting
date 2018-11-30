@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const bot = require("./third-party/circle-github-bot-release-1.0.0").create();
+const bot = require("./module/circle-github-bot").create();
 
 bot.comment(`
 <h3>${bot.env.commitMessage}</h3>

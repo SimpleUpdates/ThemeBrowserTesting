@@ -37,7 +37,11 @@ COPY install_npm.sh /install_npm.sh
 RUN chmod +x ./install_npm.sh && ./install_npm.sh
 RUN apt-get -qqy --no-install-recommends install nodejs
 
-RUN npm install -g pixelmatch
+# coffeescript - required for circle-github-bot compilation
+# pixelmatch - used to generate visual diffs
+RUN npm install -g \
+    coffeescript \
+    pixelmatch
 
 RUN git config --global user.email "nathan@simpleupdates.com"
 RUN git config --global user.name "Nathan Arthur"
@@ -45,6 +49,10 @@ RUN git config --global user.name "Nathan Arthur"
 # Locally /app is re-mounted as a volume. In CI, a volume is not used.
 COPY . /app
 RUN chmod +x /app/app.php && chmod +x /app/comment.js
+RUN cd /app && \
+    git submodule update --init --recursive && \
+    cd /app/module/circle-github-bot && \
+    npm run-script build
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN cd /app && composer install
