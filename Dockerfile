@@ -44,6 +44,7 @@ RUN git config --global user.name "Nathan Arthur"
 
 # Locally /app is re-mounted as a volume. In CI, a volume is not used.
 COPY . /app
+RUN chmod +x /app/app.php && chmod +x /app/comment.js
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN cd /app && composer install
