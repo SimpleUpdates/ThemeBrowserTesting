@@ -50,7 +50,7 @@ RUN git config --global user.name "Nathan Arthur"
 COPY . /app
 RUN chmod +x /app/app.php && chmod +x /app/comment.js
 RUN cd /app && \
-    git submodule update --init --recursive && \
+    git submodule update --init && \
     cd /app/module/circle-github-bot && \
     npm run-script build
 
