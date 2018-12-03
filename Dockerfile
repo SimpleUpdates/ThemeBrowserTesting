@@ -12,6 +12,7 @@ ARG FIREFOX_DOWNLOAD_URL="https://download.mozilla.org/?product=firefox-latest-s
 # libxt6 - required for Firefox
 # openssh-client - required for git to clone submodules
 # software-properties-common - required for NPM install script
+# unzip - required for extracting circle-github-bot
 # wget - required to download Firefox
 RUN apt-get update -qqy \
   && apt-get -qqy --no-install-recommends install \
@@ -25,6 +26,7 @@ RUN apt-get update -qqy \
    libxt6 \
    openssh-client \
    software-properties-common \
+   unzip \
    wget
 
 RUN wget --no-verbose -O /tmp/firefox.tar.bz2 $FIREFOX_DOWNLOAD_URL && \
@@ -48,11 +50,12 @@ RUN git config --global user.name "Nathan Arthur"
 
 # Locally /app is re-mounted as a volume. In CI, a volume is not used.
 COPY . /app
-RUN chmod +x /app/app.php && chmod +x /app/comment.js
-RUN cd /app && \
-    git submodule update --init && \
-    cd /app/module/circle-github-bot && \
+
+ADD https://github.com/su-narthur/circle-github-bot/archive/master.zip /circle-github-bot.zip
+RUN unzip /circle-github-bot.zip && \
+    cd /circle-github-bot-master && \
     npm run-script build
+RUN chmod +x /app/app.php && chmod +x /app/comment.js
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN cd /app && composer install
