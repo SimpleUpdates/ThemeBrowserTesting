@@ -35,4 +35,23 @@ class StubFilesystem extends Filesystem
     {
         return $this->handleCall(__FUNCTION__, func_get_args());
     }
+
+	/**
+	 * @param $themeConf
+	 */
+	public function loadThemeConf($themeConf): void
+	{
+		$themeConfJson = json_encode($themeConf);
+
+		$this->setMappedReturnValues("getFile", [
+			[THEMEVIZ_THEME_PATH . "/theme.conf", $themeConfJson]
+		]);
+	}
+
+	public function loadComponentsFileFromFilesystem($filename): void
+	{
+		$this->setMappedReturnValues("getFile", [
+			[THEMEVIZ_THEME_PATH . "/components.json", file_get_contents(__DIR__ . "/../{$filename}")]
+		]);
+	}
 }

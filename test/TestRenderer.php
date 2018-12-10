@@ -12,24 +12,7 @@ final class TestRenderer extends ThemeViz\TestCase
         $this->renderer = $this->factory->getRenderer();
     }
 
-    public function loadComponentsFileFromFilesystem($filename): void
-    {
-        $this->mockFilesystem->setMappedReturnValues("getFile", [
-            [THEMEVIZ_THEME_PATH . "/components.json", file_get_contents(__DIR__ . "/{$filename}")]
-        ]);
-    }
 
-    /**
-     * @param $themeConf
-     */
-    private function loadThemeConf($themeConf): void
-    {
-        $themeConfJson = json_encode($themeConf);
-
-        $this->mockFilesystem->setMappedReturnValues("getFile", [
-            [THEMEVIZ_THEME_PATH . "/theme.conf", $themeConfJson]
-        ]);
-    }
 
     public function testRetrievesConfigFile()
     {
@@ -43,7 +26,7 @@ final class TestRenderer extends ThemeViz\TestCase
 
     public function testRendersScreens()
     {
-        $this->loadComponentsFileFromFilesystem("testComponentsFile1.json");
+        $this->mockFilesystem->loadComponentsFileFromFilesystem("testComponentsFile1.json");
 
         $this->renderer->compile();
 
@@ -82,7 +65,7 @@ final class TestRenderer extends ThemeViz\TestCase
 
     public function testLoadsBaseLess()
     {
-        $this->loadComponentsFileFromFilesystem("testComponentsFile1.json");
+        $this->mockFilesystem->loadComponentsFileFromFilesystem("testComponentsFile1.json");
 
         $this->renderer->compile();
 
@@ -146,9 +129,9 @@ final class TestRenderer extends ThemeViz\TestCase
 
     public function testLoadsThemeConfColors()
     {
-        $this->loadComponentsFileFromFilesystem("testComponentsFile1.json");
+        $this->mockFilesystem->loadComponentsFileFromFilesystem("testComponentsFile1.json");
 
-        $this->loadThemeConf([
+        $this->mockFilesystem->loadThemeConf([
             "config" => [
                 "headerBlockColor" => [
                     "title" => "Header Background Color",
@@ -168,9 +151,9 @@ final class TestRenderer extends ThemeViz\TestCase
 
     public function testLoadsThemeConfImages()
     {
-        $this->loadComponentsFileFromFilesystem("testComponentsFile1.json");
+        $this->mockFilesystem->loadComponentsFileFromFilesystem("testComponentsFile1.json");
 
-        $this->loadThemeConf([
+        $this->mockFilesystem->loadThemeConf([
             "config" => [
                 "headlineHomeBgImage" => [
                     "title" => "Default Home - home page alternative to Carousel using the featured image option",
@@ -190,9 +173,9 @@ final class TestRenderer extends ThemeViz\TestCase
 
     public function testLoadsThemeConfMultipleTypeProperties()
     {
-        $this->loadComponentsFileFromFilesystem("testComponentsFile1.json");
+        $this->mockFilesystem->loadComponentsFileFromFilesystem("testComponentsFile1.json");
 
-        $this->loadThemeConf([
+        $this->mockFilesystem->loadThemeConf([
             "config" => [
                 "headerAlignment" => [
                     "title" => "Header alignment",
@@ -219,7 +202,7 @@ final class TestRenderer extends ThemeViz\TestCase
     {
         $this->loadMinimalComponentsFile();
 
-        $this->loadThemeConf([
+        $this->mockFilesystem->loadThemeConf([
             "depends" => [
                 "settings" => [
                     "global_bootstrap" => true

@@ -70,14 +70,28 @@ class LessCompiler
 
         $themeConfigLess = array_reduce($keys, function ($carry, $key) use ($properties) {
             $property = $properties[$key];
-            $rawValue = $property['value'];
-            $formattedValue = $this->isImageProperty($property) ? $this->formatImageLessValue($rawValue) : $rawValue;
+            $formattedValue = $this->formatValue($property);
 
             return "$carry @config-$key: $formattedValue;";
         }, "");
 
         $this->less->parse($themeConfigLess);
     }
+
+    private function formatValue($property)
+	{
+		$rawValue = $property['value'];
+
+		if ($this->isImageProperty($property)) {
+			return  $this->formatImageLessValue($rawValue);
+		}
+
+		if ($property["type"] === "text") {
+			return '"'.$rawValue.'"';
+		}
+
+		return $rawValue;
+	}
 
     /**
      * @param $value
