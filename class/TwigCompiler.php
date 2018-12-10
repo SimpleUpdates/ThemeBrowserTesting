@@ -58,9 +58,11 @@ class TwigCompiler
      */
     private function compileScenarios(array $screen): array
     {
-        return array_map(function ($scenario) use ($screen) {
+		$defaultScenario = [];
+
+		return array_map(function ($scenario) use ($screen) {
             return $this->compileScenario($screen, $scenario);
-        }, $screen["scenarios"]);
+        }, $screen["scenarios"] ?? [$defaultScenario]);
     }
 
     /**

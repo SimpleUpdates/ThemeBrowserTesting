@@ -40,4 +40,19 @@ final class TestTwigCompiler extends ThemeViz\TestCase
 
         $this->mockLess->assertCallCount("getCss", 1);
     }
+
+	public function testCompilesComponentWithNoScenarios()
+	{
+		$componentsFile = [
+			"screens" => [
+				[
+					"path" => "path/to/file.twig"
+				]
+			]
+		];
+
+		$this->twigCompiler->compileTwig([], $componentsFile);
+
+		$this->mockTwig->assertMethodCalled("renderFile");
+	}
 }
