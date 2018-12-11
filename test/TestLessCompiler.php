@@ -54,4 +54,16 @@ final class TestLessCompiler extends ThemeViz\TestCase
 			"@config-heroSlogan: \"Welcome to your website's fresh look!\";"
 		);
 	}
+
+	public function testDefinesAssetPathVariable()
+	{
+		$this->mockFilesystem->loadComponentsFileFromFilesystem("testComponentsFile1.json");
+
+		$this->lessCompiler->getCss([], []);
+
+		$this->mockLess->assertCallsContain(
+			"parse",
+			"@su-assetpath: \"".THEMEVIZ_THEME_PATH."/asset\";"
+		);
+	}
 }

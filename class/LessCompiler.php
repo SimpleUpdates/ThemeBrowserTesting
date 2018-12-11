@@ -28,6 +28,7 @@ class LessCompiler
         $this->less->resetParser();
 
         $this->parseBaseLess();
+        $this->less->parse("@su-assetpath: \"".THEMEVIZ_THEME_PATH."/asset\";");
         $this->parseThemeConfigProperties($themeConfig);
         $this->parseLessDefaults($componentsFile);
         $this->parseThemeGlobalLess();
