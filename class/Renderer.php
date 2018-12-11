@@ -60,8 +60,7 @@ class Renderer
         $this->makeBuild("pull");
 
         $this->git->saveState(THEMEVIZ_THEME_PATH);
-        $this->git->checkoutBranch(THEMEVIZ_THEME_PATH, "production") ||
-            $this->git->checkoutRemoteBranch(THEMEVIZ_THEME_PATH, "production");
+        $this->git->checkoutRemoteBranch(THEMEVIZ_THEME_PATH, "production");
         $this->git->pull(THEMEVIZ_THEME_PATH, "production");
 
         $this->makeBuild("production");

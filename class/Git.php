@@ -30,6 +30,8 @@ class Git
 
     public function checkoutBranch($path, $branch)
     {
+    	// Warning: This will create a new branch if one doesn't exist.
+
         var_dump("Checkout branch $branch");
         $out = $this->exec("cd $path; git checkout $branch");
 

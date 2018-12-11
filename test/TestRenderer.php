@@ -320,17 +320,6 @@ final class TestRenderer extends ThemeViz\TestCase
         );
     }
 
-    public function testDoesNotCheckoutRemoteBranchIfLocalBranchAvailable()
-    {
-        $this->loadMinimalComponentsFile();
-
-        $this->mockGit->setReturnValue("checkoutBranch", true);
-
-        $this->renderer->compile();
-
-        $this->mockGit->assertMethodNotCalled("checkoutRemoteBranch");
-    }
-
     public function testMakesDiffs()
     {
         $this->loadMinimalComponentsFile();
