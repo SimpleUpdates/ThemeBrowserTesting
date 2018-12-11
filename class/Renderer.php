@@ -55,6 +55,14 @@ class Renderer
         $this->themeConfig = $this->getThemeConfig();
         $this->componentsFile = $this->getComponentsFile();
 
+        if (!$this->themeConfig) {
+        	throw new \Exception("Missing theme.conf file!");
+		}
+
+        if (!$this->componentsFile) {
+        	throw new \Exception("Missing components file!");
+		}
+
         $this->filesystem->deleteTree(THEMEVIZ_BASE_PATH . "/build");
 
         $this->makeBuild("pull");
@@ -87,9 +95,10 @@ class Renderer
         $this->photographer->photographComponents($componentFolder, $photoFolder);
     }
 
-    /**
-     * @return array
-     */
+	/**
+	 * @return array
+	 * @throws \Exception
+	 */
     private function getComponentsFile(): array
     {
         return $this->getCachedDecodedJsonFile(
@@ -98,9 +107,10 @@ class Renderer
         );
     }
 
-    /**
-     * @return array
-     */
+	/**
+	 * @return array
+	 * @throws \Exception
+	 */
     private function getThemeConfig(): array
     {
         return $this->getCachedDecodedJsonFile(
@@ -109,16 +119,22 @@ class Renderer
         );
     }
 
-    /**
-     * @param $fieldName
-     * @param $path
-     * @return mixed
-     */
+	/**
+	 * @param $fieldName
+	 * @param $path
+	 * @return mixed
+	 * @throws \Exception
+	 */
     private function getCachedDecodedJsonFile($fieldName, $path)
     {
         if (!$this->$fieldName) {
             $json = $this->filesystem->getFile($path);
-            $this->$fieldName = json_decode($json, TRUE) ?? [];
+
+			$this->$fieldName = json_decode($json, TRUE);
+
+            if ($json && $this->$fieldName === NULL) {
+            	throw new \Exception("Error attempting to decode json file: $path");
+			}
         }
 
         return $this->$fieldName;
