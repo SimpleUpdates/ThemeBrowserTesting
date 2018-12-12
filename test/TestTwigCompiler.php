@@ -19,6 +19,8 @@ final class TestTwigCompiler extends ThemeViz\TestCase
 
     public function testCompilesCssOncePerCompilation()
     {
+    	$this->mockLess->setReturnValue("getCss", "rendered_css");
+
         $componentsFile = [
             "screens" => [
                 [

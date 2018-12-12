@@ -22,7 +22,16 @@ class Factory
     /** @var Twig $twig */
     private $twig;
 
-    public function __construct(
+	/**
+	 * Factory constructor.
+	 * @param Filesystem|null $filesystem
+	 * @param Firefox|null $firefox
+	 * @param Git|null $git
+	 * @param Less|null $less
+	 * @param Pixelmatch|null $pixelmatch
+	 * @param Twig|null $twig
+	 */
+	public function __construct(
         Filesystem $filesystem = null,
         Firefox $firefox = null,
         Git $git = null,
@@ -39,143 +48,64 @@ class Factory
         $this->twig = $twig;
     }
 
-    /**
-     * @return Renderer
-     */
-    public function getRenderer()
-    {
-        return $this->getObject(
-            "Renderer",
-            $this->getDiffer(),
-            $this->getFilesystem(),
-            $this->getGit(),
-            $this->getPhotographer(),
-            $this->getScenarioStorage(),
-            $this->getSummaryCompiler(),
-            $this->getTwigCompiler()
-        );
-    }
+	/**
+	 * @param $method
+	 * @param array $args
+	 * @return null
+	 * @throws \ReflectionException
+	 */
+	public function __call($method, $args = [])
+	{
+		$isGet = substr( $method, 0, 3 ) === "get";
 
-    /**
-     * @return TwigCompiler
-     */
-    public function getTwigCompiler()
-    {
-        return $this->getObject(
-            "TwigCompiler",
-            $this->getLessCompiler(),
-            $this->getTwig()
-        );
-    }
+		if (!$isGet) return null;
 
-    /**
-     * @return LessCompiler
-     */
-    public function getLessCompiler()
-    {
-        return $this->getObject(
-            "LessCompiler",
-            $this->getFilesystem(),
-            $this->getLess()
-        );
-    }
+		$name = substr($method, 3, strlen($method) - 3);
+		$dependencyNames = $this->getDependencyNames($name);
+		$dependencies = array_map(function($dependencyName) {
+			$methodName = "get$dependencyName";
+			return $this->$methodName();
+		}, $dependencyNames);
 
-    /**
-     * @return Differ
-     */
-    public function getDiffer()
-    {
-        return $this->getObject(
-            "Differ",
-            $this->getFilesystem(),
-            $this->getPixelmatch()
-        );
-    }
+		return $this->getObject($name, ...$dependencies);
+	}
 
-    /**
-     * @return Photographer
-     */
-    public function getPhotographer()
-    {
-        return $this->getObject(
-            "Photographer",
-            $this->getFilesystem(),
-            $this->getFirefox()
-        );
-    }
+	/**
+	 * @param $name
+	 * @return array|mixed
+	 * @throws \ReflectionException
+	 */
+	private function getDependencyNames($name)
+	{
+		$simpleName = $this->getSimpleClassName($name);
+		$reflection = new \ReflectionClass("\\ThemeViz\\$simpleName");
+		$constructor = $reflection->getConstructor();
+		$params = ($constructor) ? $constructor->getParameters() : [];
 
-    /**
-     * @return SummaryCompiler
-     */
-    public function getSummaryCompiler()
-    {
-        return $this->getObject(
-            "SummaryCompiler",
-            $this->getFilesystem(),
-            $this->getTwig()
-        );
-    }
+		return array_map(function($param) {
+			$name = $param->getClass()->name;
 
-    /**
-     * @return ScenarioStorage
-     */
-    public function getScenarioStorage()
-    {
-        return $this->getObject(
-            "ScenarioStorage",
-            $this->getFilesystem()
-        );
-    }
+			return $this->getSimpleClassName($name);
+		}, $params);
+	}
 
-    /**
-     * @return Filesystem
-     */
-    public function getFilesystem()
-    {
-        return $this->getObject("Filesystem");
-    }
+	/**
+	 * @param $name
+	 * @return string
+	 */
+	private function getSimpleClassName($name): string
+	{
+		$nameFragments = explode("\\", $name);
 
-    /**
-     * @return Firefox
-     */
-    public function getFirefox()
-    {
-        return $this->getObject("Firefox");
-    }
+		return end($nameFragments);
+	}
 
-    /**
-     * @return Git
-     */
-    public function getGit()
-    {
-        return $this->getObject("Git");
-    }
-
-    /**
-     * @return Less
-     */
-    public function getLess()
-    {
-        return $this->getObject("Less");
-    }
-
-    /**
-     * @return Pixelmatch
-     */
-    public function getPixelmatch()
-    {
-        return $this->getObject("Pixelmatch");
-    }
-
-    /**
-     * @return Twig
-     */
-    public function getTwig()
-    {
-        return $this->getObject("Twig");
-    }
-
-    private function getObject($class, ...$dependencies)
+	/**
+	 * @param $class
+	 * @param mixed ...$dependencies
+	 * @return mixed
+	 */
+	private function getObject($class, ...$dependencies)
     {
         $fullClassName = "\\ThemeViz\\$class";
         $propertyName = lcfirst($class);

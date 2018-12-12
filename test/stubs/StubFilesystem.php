@@ -8,7 +8,7 @@ class StubFilesystem extends Filesystem
 
     public function getFile($path)
     {
-        return $this->handleCall(__FUNCTION__, func_get_args());
+		return $this->handleCall(__FUNCTION__, func_get_args());
     }
 
     public function deleteTree($dir)
@@ -45,6 +45,15 @@ class StubFilesystem extends Filesystem
 
 		$this->setMappedReturnValues("getFile", [
 			[THEMEVIZ_THEME_PATH . "/theme.conf", $themeConfJson]
+		]);
+	}
+
+	public function loadComponentsFile($componentsFile): void
+	{
+		$componentsFileJson = json_encode($componentsFile);
+
+		$this->setMappedReturnValues("getFile", [
+			[THEMEVIZ_THEME_PATH . "/components.json", $componentsFileJson]
 		]);
 	}
 

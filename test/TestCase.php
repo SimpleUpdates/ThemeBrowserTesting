@@ -63,6 +63,9 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             $this->mockPixelmatch,
             $this->mockTwig
         );
+
+        $this->mockFilesystem->loadThemeConf([]);
+        $this->mockFilesystem->loadComponentsFile([]);
     }
 
     protected function loadMinimalComponentsFile(): void

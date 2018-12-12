@@ -55,11 +55,11 @@ class Renderer
         $this->themeConfig = $this->getThemeConfig();
         $this->componentsFile = $this->getComponentsFile();
 
-        if (!$this->themeConfig) {
+        if ($this->themeConfig === null) {
         	throw new \Exception("Missing theme.conf file!");
 		}
 
-        if (!$this->componentsFile) {
+        if ($this->componentsFile === null) {
         	throw new \Exception("Missing components file!");
 		}
 
@@ -82,8 +82,7 @@ class Renderer
 
     /**
      * @param $buildName
-     * @throws \Less_Exception_Parser
-     */
+	 */
     private function makeBuild($buildName): void
     {
         if (!$components = $this->twigCompiler->compileTwig($this->themeConfig, $this->componentsFile)) return;

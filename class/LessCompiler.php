@@ -53,6 +53,7 @@ class LessCompiler
     private function parseBaseLess(): void
     {
         $baseLess = $this->filesystem->getFile(THEMEVIZ_BASE_PATH . "/view/base.less") ?? "";
+
         $this->less->parse($baseLess);
     }
 

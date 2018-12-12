@@ -12,8 +12,6 @@ final class TestRenderer extends ThemeViz\TestCase
         $this->renderer = $this->factory->getRenderer();
     }
 
-
-
     public function testRetrievesConfigFile()
     {
         $this->renderer->compile();
@@ -75,7 +73,10 @@ final class TestRenderer extends ThemeViz\TestCase
         ));
     }
 
-    public function testParsesBaseLess()
+	/**
+	 * @throws Exception
+	 */
+	public function testParsesBaseLess()
     {
         $this->loadMinimalComponentsFile();
 
@@ -83,10 +84,10 @@ final class TestRenderer extends ThemeViz\TestCase
 
         $this->renderer->compile();
 
-        $this->assertTrue($this->mockLess->wasMethodCalledWith(
+        $this->mockLess->assertMethodCalledWith(
             "parse",
             "base_less"
-        ));
+        );
     }
 
     public function testSavesRenderedTemplates()
