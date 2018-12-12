@@ -36,16 +36,50 @@ class Component
 	 */
 	private function getScenarioData($scenario)
 	{
-		$classes = implode(",", $this->componentsFile["wrapperClasses"] ?? []);
-		$useBootstrap = $this->themeConfig["depends"]["settings"]["global_bootstrap"] ?? FALSE;
+		return array_merge_recursive(
+			$this->getBaseData(),
+			$scenario
+		);
+	}
+
+	/**
+	 * @return array
+	 */
+	private function getBaseData(): array
+	{
 		$componentData = [
-			"themeviz_component_path" => $this->screen["path"],
-			"themeviz_wrapper_classes" => $classes,
+			"themeviz_component_path" => $this->getPath(),
+			"themeviz_wrapper_classes" => $this->getWrapperClasses(),
 			"themeviz_css" => $this->css,
-			"themeviz_use_bootstrap" => $useBootstrap
+			"themeviz_use_bootstrap" => $this->shouldUseBootstrap()
 		];
+
 		$themeDefaults = $this->componentsFile["defaults"]["twig"] ?? [];
 
-		return array_merge_recursive($componentData, $themeDefaults, $scenario);
+		return array_merge($componentData, $themeDefaults);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getPath()
+	{
+		return $this->screen["path"];
+	}
+
+	/**
+	 * @return string
+	 */
+	private function getWrapperClasses(): string
+	{
+		return implode(",", $this->componentsFile["wrapperClasses"] ?? []);
+	}
+
+	/**
+	 * @return bool
+	 */
+	private function shouldUseBootstrap(): bool
+	{
+		return $this->themeConfig["depends"]["settings"]["global_bootstrap"] ?? FALSE;
 	}
 }

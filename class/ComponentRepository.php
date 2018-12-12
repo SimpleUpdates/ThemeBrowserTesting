@@ -22,14 +22,23 @@ class ComponentRepository
 		$this->lessCompiler = $lessCompiler;
 	}
 
-	public function getComponent($screen)
+	/**
+	 * @return array
+	 * @throws \Less_Exception_Parser
+	 * @throws \Exception
+	 */
+	public function getComponents()
 	{
 		$this->themeConfig = $this->getThemeConfig();
 		$this->componentsFile = $this->getComponentsFile();
 
 		$this->css = $this->css ?? $this->lessCompiler->getCss($this->themeConfig, $this->componentsFile);
 
-		return new Component($this->componentsFile, $this->css, $screen, $this->themeConfig);
+		$screens = $this->componentsFile["screens"] ?? [];
+
+		return array_map(function($screen) {
+			return new Component($this->componentsFile, $this->css, $screen, $this->themeConfig);
+		}, $screens);
 	}
 
 	/**

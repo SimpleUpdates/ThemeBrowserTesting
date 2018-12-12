@@ -10,9 +10,6 @@ class TwigCompiler
     /** @var Twig $twig */
     private $twig;
 
-    private $themeConfig;
-    private $componentsFile;
-
     public function __construct(ComponentRepository $componentRepository, Twig $twig)
     {
     	$this->componentRepository = $componentRepository;
@@ -20,44 +17,29 @@ class TwigCompiler
     }
 
     /**
-     * @param $themeConfig
-     * @param $componentsFile
      * @return array
 	 */
-    public function compileTwig($themeConfig, $componentsFile): array
+    public function compileTwig(): array
     {
-        $this->themeConfig = $themeConfig;
-        $this->componentsFile = $componentsFile;
+		$components = $this->componentRepository->getComponents();
 
-        return $this->compileScreens();
+		return array_reduce($components, function ($carry, Component $component) {
+			$path = $component->getPath();
+			$renderedScenarios = $this->compileScenarios($component);
+
+			return array_merge($carry, [$path => $renderedScenarios]);
+		}, []);
     }
 
-    /**
-     * @return array
-     */
-    private function compileScreens(): array
+	/**
+	 * @param $component
+	 * @return array
+	 */
+    private function compileScenarios(Component $component): array
     {
-        $screens = $this->componentsFile["screens"] ?? [];
-
-        return array_reduce($screens, function ($carry, $screen) {
-            $path = $screen["path"];
-            $renderedScenarios = $this->compileScenarios($screen);
-
-            return array_merge($carry, [$path => $renderedScenarios]);
-        }, []);
-    }
-
-    /**
-     * @param array $screen
-     * @return array
-     */
-    private function compileScenarios(array $screen): array
-    {
-		$component = $this->componentRepository->getComponent($screen);
-
 		$scenarios = $component->getScenarios();
 
-		return array_map(function ($scenario) use ($screen) {
+		return array_map(function ($scenario) {
 			return $this->twig->renderFile("component.twig", $scenario);
 		}, $scenarios);
     }

@@ -25,9 +25,6 @@ class Renderer
     /** @var TwigCompiler $twigCompiler */
     private $twigCompiler;
 
-    private $themeConfig;
-    private $componentsFile;
-
     public function __construct(
         Differ $differ,
         Filesystem $filesystem,
@@ -52,17 +49,6 @@ class Renderer
      */
     public function compile()
     {
-        $this->themeConfig = $this->getThemeConfig();
-        $this->componentsFile = $this->getComponentsFile();
-
-        if ($this->themeConfig === null) {
-        	throw new \Exception("Missing theme.conf file!");
-		}
-
-        if ($this->componentsFile === null) {
-        	throw new \Exception("Missing components file!");
-		}
-
         $this->filesystem->deleteTree(THEMEVIZ_BASE_PATH . "/build");
 
         $this->makeBuild("pull");
@@ -85,57 +71,12 @@ class Renderer
 	 */
     private function makeBuild($buildName): void
     {
-        if (!$components = $this->twigCompiler->compileTwig($this->themeConfig, $this->componentsFile)) return;
+        if (!$components = $this->twigCompiler->compileTwig()) return;
 
         $componentFolder = THEMEVIZ_BASE_PATH . "/build/$buildName/html";
         $photoFolder = THEMEVIZ_BASE_PATH . "/build/$buildName/shots";
 
         $this->scenarioStorage->persistScenarios($components, $componentFolder);
         $this->photographer->photographComponents($componentFolder, $photoFolder);
-    }
-
-	/**
-	 * @return array
-	 * @throws \Exception
-	 */
-    private function getComponentsFile(): array
-    {
-        return $this->getCachedDecodedJsonFile(
-            "componentsFile",
-            THEMEVIZ_THEME_PATH . "/components.json"
-        );
-    }
-
-	/**
-	 * @return array
-	 * @throws \Exception
-	 */
-    private function getThemeConfig(): array
-    {
-        return $this->getCachedDecodedJsonFile(
-            "themeConfig",
-            THEMEVIZ_THEME_PATH . "/theme.conf"
-        );
-    }
-
-	/**
-	 * @param $fieldName
-	 * @param $path
-	 * @return mixed
-	 * @throws \Exception
-	 */
-    private function getCachedDecodedJsonFile($fieldName, $path)
-    {
-        if (!$this->$fieldName) {
-            $json = $this->filesystem->getFile($path);
-
-			$this->$fieldName = json_decode($json, TRUE);
-
-            if ($json && $this->$fieldName === NULL) {
-            	throw new \Exception("Error attempting to decode json file: $path");
-			}
-        }
-
-        return $this->$fieldName;
     }
 }

@@ -53,6 +53,8 @@ final class TestTwigCompiler extends ThemeViz\TestCase
 			]
 		];
 
+		$this->mockFilesystem->loadComponentsFile($componentsFile);
+
 		$this->twigCompiler->compileTwig([], $componentsFile);
 
 		$this->mockTwig->assertMethodCalled("renderFile");

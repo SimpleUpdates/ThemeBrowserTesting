@@ -19,8 +19,10 @@ final class TestComponentRepository extends ThemeViz\TestCase
 
 	public function testBuildComponent()
 	{
-		$c = $this->componentRepository->getComponent([],[],[],[],[]);
+		$this->loadMinimalComponentsFile();
 
-		$this->assertInstanceOf("\\ThemeViz\\Component", $c);
+		$components = $this->componentRepository->getComponents();
+
+		$this->assertInstanceOf("\\ThemeViz\\Component", $components[0]);
 	}
 }
