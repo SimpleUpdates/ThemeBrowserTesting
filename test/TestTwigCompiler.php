@@ -38,7 +38,9 @@ final class TestTwigCompiler extends ThemeViz\TestCase
             ]
         ];
 
-        $this->twigCompiler->compileTwig([], $componentsFile);
+        $this->mockFilesystem->loadComponentsFile($componentsFile);
+
+        $this->twigCompiler->compileTwig();
 
         $this->mockLess->assertCallCount("getCss", 1);
     }
@@ -55,8 +57,19 @@ final class TestTwigCompiler extends ThemeViz\TestCase
 
 		$this->mockFilesystem->loadComponentsFile($componentsFile);
 
-		$this->twigCompiler->compileTwig([], $componentsFile);
+		$this->twigCompiler->compileTwig();
 
 		$this->mockTwig->assertMethodCalled("renderFile");
+	}
+
+	public function testCompilesComponentWithDataObject()
+	{
+		$this->loadMinimalComponentsFile();
+
+		$this->twigCompiler->compileTwig();
+
+		$calls = $this->mockTwig->getCalls("renderFile");
+
+		$this->assertInstanceOf("\\ThemeViz\\Data", $calls[0][1]);
 	}
 }

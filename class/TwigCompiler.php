@@ -7,17 +7,22 @@ class TwigCompiler
 	/** @var ComponentFactory $componentRepository */
 	private $componentRepository;
 
+	/** @var DataFactory $dataFactory */
+	private $dataFactory;
+
     /** @var Twig $twig */
     private $twig;
 
-    public function __construct(ComponentFactory $componentRepository, Twig $twig)
+    public function __construct(DataFactory $dataFactory, ComponentFactory $componentRepository, Twig $twig)
     {
+    	$this->dataFactory = $dataFactory;
     	$this->componentRepository = $componentRepository;
         $this->twig = $twig;
     }
 
-    /**
-     * @return array
+	/**
+	 * @return array
+	 * @throws \Less_Exception_Parser
 	 */
     public function compileTwig(): array
     {
@@ -40,7 +45,9 @@ class TwigCompiler
 		$scenarios = $component->getScenarios();
 
 		return array_map(function ($scenario) {
-			return $this->twig->renderFile("component.twig", $scenario);
+			$data = $this->dataFactory->makeData($scenario);
+
+			return $this->twig->renderFile("component.twig", $data);
 		}, $scenarios);
     }
 }

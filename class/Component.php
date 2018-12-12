@@ -6,14 +6,16 @@ class Component
 {
 	private $componentsFile;
 	private $css;
-	private $screen;
+	private $path;
+	private $scenarios;
 	private $themeConfig;
 
-	public function __construct($componentsFile, $css, $screen, $themeConfig)
+	public function __construct($componentsFile, $css, $path, $scenarios, $themeConfig)
 	{
 		$this->componentsFile = $componentsFile;
 		$this->css = $css;
-		$this->screen = $screen;
+		$this->path = $path;
+		$this->scenarios = $scenarios;
 		$this->themeConfig = $themeConfig;
 	}
 
@@ -23,7 +25,7 @@ class Component
 	public function getScenarios()
 	{
 		$defaultScenario = [];
-		$scenarios = $this->screen["scenarios"] ?: [$defaultScenario];
+		$scenarios = $this->scenarios ?: [$defaultScenario];
 
 		return array_map(function ($scenario) {
 			return $this->getScenarioData($scenario);
@@ -64,7 +66,7 @@ class Component
 	 */
 	public function getPath()
 	{
-		return $this->screen["path"];
+		return $this->path;
 	}
 
 	/**

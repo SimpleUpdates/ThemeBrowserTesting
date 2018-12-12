@@ -5,14 +5,18 @@ namespace ThemeViz;
 
 class SummaryCompiler
 {
+	/** @var DataFactory $dataFactory */
+	private $dataFactory;
+
     /** @var Filesystem $filesystem */
     private $filesystem;
 
     /** @var Twig $twig */
     private $twig;
 
-    public function __construct(Filesystem $filesystem, Twig $twig)
+    public function __construct(DataFactory $dataFactory, Filesystem $filesystem, Twig $twig)
     {
+    	$this->dataFactory = $dataFactory;
         $this->filesystem = $filesystem;
         $this->twig = $twig;
     }
@@ -30,7 +34,9 @@ class SummaryCompiler
             ];
         }, $files ?? []);
 
-        $html = $this->twig->renderFile("summary.twig", ["themeviz_components" => $components]);
+        $data = $this->dataFactory->makeData(["themeviz_components" => $components]);
+
+        $html = $this->twig->renderFile("summary.twig", $data);
 
         $this->filesystem->fileForceContents(
             THEMEVIZ_BASE_PATH . "/build/summary.html",

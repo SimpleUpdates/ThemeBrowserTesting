@@ -1,10 +1,10 @@
 <?php
 
-final class TestScenario extends ThemeViz\TestCase
+final class TestData extends ThemeViz\TestCase
 {
 	public function testReturnsStoredValues()
 	{
-		$s = new ThemeViz\Scenario([
+		$s = new ThemeViz\Data([
 			"getIcon" => "icon"
 		]);
 
@@ -15,7 +15,7 @@ final class TestScenario extends ThemeViz\TestCase
 
 	public function testTrainWithReturnValue()
 	{
-		$s = new ThemeViz\Scenario([
+		$s = new ThemeViz\Data([
 			"content" => "content"
 		]);
 
@@ -26,7 +26,7 @@ final class TestScenario extends ThemeViz\TestCase
 
 	public function testVariableTrains()
 	{
-		$s = new ThemeViz\Scenario([
+		$s = new ThemeViz\Data([
 			"collection..find" => "result"
 		]);
 

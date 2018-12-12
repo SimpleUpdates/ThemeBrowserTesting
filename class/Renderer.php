@@ -66,8 +66,9 @@ class Renderer
         $this->summaryCompiler->compile();
     }
 
-    /**
-     * @param $buildName
+	/**
+	 * @param $buildName
+	 * @throws \Less_Exception_Parser
 	 */
     private function makeBuild($buildName): void
     {

@@ -37,7 +37,13 @@ class ComponentFactory
 		$screens = $this->componentsFile["screens"] ?? [];
 
 		return array_map(function($screen) {
-			return new Component($this->componentsFile, $this->css, $screen, $this->themeConfig);
+			return new Component(
+				$this->componentsFile,
+				$this->css,
+				$screen["path"],
+				$screen["scenarios"],
+				$this->themeConfig
+			);
 		}, $screens);
 	}
 

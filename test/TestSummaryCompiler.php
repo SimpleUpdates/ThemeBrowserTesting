@@ -35,17 +35,19 @@ final class TestSummaryCompiler extends ThemeViz\TestCase
 
         $this->summaryCompiler->compile();
 
+        $data = new ThemeViz\Data(["themeviz_components" => [
+			[
+				"name" => "component.png",
+				"expected" => "production/shots/component.png",
+				"actual" => "pull/shots/component.png",
+				"diff" => "diffs/component.png"
+			]
+		]]);
+
         $this->mockTwig->assertMethodCalledWith(
             "renderFile",
             "summary.twig",
-            ["themeviz_components" => [
-                [
-                    "name" => "component.png",
-                    "expected" => "production/shots/component.png",
-                    "actual" => "pull/shots/component.png",
-                    "diff" => "diffs/component.png"
-                ]
-            ]]
+            $data
         );
     }
 

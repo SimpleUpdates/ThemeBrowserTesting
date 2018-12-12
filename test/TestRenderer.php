@@ -215,7 +215,7 @@ final class TestRenderer extends ThemeViz\TestCase
 
         $this->mockTwig->assertAnyCallMatches("renderFile", function ($carry, $call) {
             $data = $call[1];
-            $useBootstrap = $data["themeviz_use_bootstrap"] ?? FALSE;
+            $useBootstrap = (!is_array($data)) ? $data->themeviz_use_bootstrap() : FALSE;
 
             return $carry || $useBootstrap;
         });
@@ -232,7 +232,7 @@ final class TestRenderer extends ThemeViz\TestCase
         $this->mockTwig->assertAnyCallMatches("renderFile", function($carry, $call) {
            $data = $call[1];
 
-           return $carry || $data["themeviz_css"] === "compiled_css";
+           return $carry || $data->themeviz_css() === "compiled_css";
         });
     }
 

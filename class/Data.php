@@ -2,7 +2,7 @@
 namespace ThemeViz;
 
 
-class Scenario
+class Data
 {
 	private $data;
 	private $matchers;
