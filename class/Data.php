@@ -7,16 +7,27 @@ class Data
 	private $data;
 	private $matchers;
 	private $train = [];
+	private $collectionData = [];
+	private $collectionName;
 
-	public function __construct($data = [])
+	public function __construct($data = [], $collectionData = [])
 	{
 		$this->data = $data;
+		$this->collectionData = $collectionData;
 		$this->matchers = $this->makeMatchers($this->data);
 	}
 
 	public function __call($name, $arguments)
 	{
 		$this->train[] = $name;
+
+		if ($name === "collection") {
+			$this->collectionName = $arguments[0];
+		}
+
+		if ($this->collectionName && $name === "find") {
+			return $this->collectionData[$this->collectionName] ?? [];
+		}
 
 		return $this->getReturnValue() ?? $this;
 	}

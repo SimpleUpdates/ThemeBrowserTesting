@@ -24,13 +24,33 @@ final class TestData extends ThemeViz\TestCase
 		$this->assertEquals("content", $result);
 	}
 
+	public function testCollectionReturnValues()
+	{
+		$s = new ThemeViz\Data([], [
+			"myCollection" => "result"
+		]);
+
+		$result = $s->su()->collection("myCollection")->randomize()->find();
+
+		$this->assertEquals("result", $result);
+	}
+
+	public function testCollectionReturnsEmptyArrayIfNotInstantiated()
+	{
+		$s = new ThemeViz\Data([], []);
+
+		$result = $s->su()->collection("myCollection")->randomize()->find();
+
+		$this->assertEquals([], $result);
+	}
+
 	public function testVariableTrains()
 	{
 		$s = new ThemeViz\Data([
-			"collection..find" => "result"
+			"one..three" => "result"
 		]);
 
-		$result = $s->su()->collection()->randomize()->find();
+		$result = $s->zero()->one()->two()->three();
 
 		$this->assertEquals("result", $result);
 	}

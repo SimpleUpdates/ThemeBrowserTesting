@@ -49,14 +49,14 @@ class Component
 	 */
 	private function getBaseData(): array
 	{
+		$themeDefaults = $this->componentsFile["defaults"]["twig"] ?? [];
+
 		$componentData = [
 			"themeviz_component_path" => $this->getPath(),
 			"themeviz_wrapper_classes" => $this->getWrapperClasses(),
 			"themeviz_css" => $this->css,
 			"themeviz_use_bootstrap" => $this->shouldUseBootstrap()
 		];
-
-		$themeDefaults = $this->componentsFile["defaults"]["twig"] ?? [];
 
 		return array_merge($componentData, $themeDefaults);
 	}
