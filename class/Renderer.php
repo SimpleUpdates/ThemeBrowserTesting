@@ -16,7 +16,7 @@ class Renderer
     /** @var Photographer $photographer */
     private $photographer;
 
-    /** @var ScenarioStorage $scenarioStorage */
+    /** @var TwigStore $scenarioStorage */
     private $scenarioStorage;
 
     /** @var SummaryCompiler $summaryCompiler */
@@ -26,13 +26,13 @@ class Renderer
     private $twigCompiler;
 
     public function __construct(
-        Differ $differ,
-        Filesystem $filesystem,
-        Git $git,
-        Photographer $photographer,
-        ScenarioStorage $scenarioStorage,
-        SummaryCompiler $summaryCompiler,
-        TwigCompiler $twigCompiler
+		Differ $differ,
+		Filesystem $filesystem,
+		Git $git,
+		Photographer $photographer,
+		TwigStore $scenarioStorage,
+		SummaryCompiler $summaryCompiler,
+		TwigCompiler $twigCompiler
     )
     {
         $this->differ = $differ;
@@ -76,7 +76,7 @@ class Renderer
         $componentFolder = THEMEVIZ_BASE_PATH . "/build/$buildName/html";
         $photoFolder = THEMEVIZ_BASE_PATH . "/build/$buildName/shots";
 
-        $this->scenarioStorage->persistScenarios($components, $componentFolder);
+        $this->scenarioStorage->persistTwigComponents($components, $componentFolder);
         $this->photographer->photographComponents($componentFolder, $photoFolder);
     }
 }

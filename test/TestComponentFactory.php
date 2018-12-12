@@ -1,20 +1,20 @@
 <?php
 
-final class TestComponentRepository extends ThemeViz\TestCase
+final class TestComponentFactory extends ThemeViz\TestCase
 {
-	/** @var \ThemeViz\ComponentRepository $componentRepository */
+	/** @var \ThemeViz\ComponentFactory $componentRepository */
 	private $componentRepository;
 
 	protected function setUp()
 	{
 		parent::setUp();
 
-		$this->componentRepository = $this->factory->getComponentRepository();
+		$this->componentRepository = $this->factory->getComponentFactory();
 	}
 
 	public function testExists()
 	{
-		$this->assertInstanceOf("\\ThemeViz\\ComponentRepository", $this->componentRepository);
+		$this->assertInstanceOf("\\ThemeViz\\ComponentFactory", $this->componentRepository);
 	}
 
 	public function testBuildComponent()

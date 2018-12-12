@@ -4,13 +4,13 @@ namespace ThemeViz;
 
 class TwigCompiler
 {
-	/** @var ComponentRepository $componentRepository */
+	/** @var ComponentFactory $componentRepository */
 	private $componentRepository;
 
     /** @var Twig $twig */
     private $twig;
 
-    public function __construct(ComponentRepository $componentRepository, Twig $twig)
+    public function __construct(ComponentFactory $componentRepository, Twig $twig)
     {
     	$this->componentRepository = $componentRepository;
         $this->twig = $twig;

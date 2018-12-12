@@ -3,7 +3,7 @@
 namespace ThemeViz;
 
 
-class ComponentRepository
+class ComponentFactory
 {
 	/** @var Filesystem $filesystem */
 	private $filesystem;

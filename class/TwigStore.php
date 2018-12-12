@@ -2,7 +2,7 @@
 
 namespace ThemeViz;
 
-class ScenarioStorage
+class TwigStore
 {
     /** @var Filesystem $filesystem */
     private $filesystem;
@@ -17,26 +17,26 @@ class ScenarioStorage
     }
 
     /**
-     * @param $templates
+     * @param $twigComponents
      * @param $folder
      */
-    public function persistScenarios($templates, $folder): void
+    public function persistTwigComponents($twigComponents, $folder): void
     {
         $this->folder = $folder;
 
-        array_map(function ($key) use ($templates) {
-            $scenarios = $templates[$key];
+        array_map(function ($key) use ($twigComponents) {
+            $scenarios = $twigComponents[$key];
             $templatePath = $key;
 
-            $this->persistTemplateScenarios($templatePath, $scenarios);
-        }, array_keys($templates));
+            $this->persistTwigScenarios($templatePath, $scenarios);
+        }, array_keys($twigComponents));
     }
 
     /**
      * @param $templatePath
      * @param $scenarios
      */
-    private function persistTemplateScenarios($templatePath, $scenarios): void
+    private function persistTwigScenarios($templatePath, $scenarios): void
     {
         array_map(function ($key) use ($templatePath, $scenarios) {
             $scenarioName = $key;
