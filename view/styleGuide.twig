@@ -1,0 +1,4 @@
+{% for component in themeviz_components %}
+	<h1>{{ component.name }}</h1>
+	<iframe src="/html?path={{ component.html|e("url") }}" frameborder="0"></iframe>
+{% endfor %}

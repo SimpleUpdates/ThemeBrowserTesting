@@ -54,4 +54,15 @@ final class TestData extends ThemeViz\TestCase
 
 		$this->assertEquals("result", $result);
 	}
+
+	public function testAddData()
+	{
+		$s = new ThemeViz\Data();
+
+		$s->addData(["new" => "data"]);
+
+		$result = $s->new();
+
+		$this->assertEquals("data", $result);
+	}
 }

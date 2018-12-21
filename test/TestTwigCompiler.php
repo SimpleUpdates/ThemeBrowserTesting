@@ -62,14 +62,14 @@ final class TestTwigCompiler extends ThemeViz\TestCase
 		$this->mockTwig->assertMethodCalled("renderFile");
 	}
 
-	public function testCompilesComponentWithDataObject()
-	{
-		$this->loadMinimalComponentsFile();
-
-		$this->twigCompiler->compileTwig();
-
-		$calls = $this->mockTwig->getCalls("renderFile");
-
-		$this->assertInstanceOf("\\ThemeViz\\Data", $calls[0][1]);
-	}
+//	public function testCompilesComponentWithDataObject()
+//	{
+//		$this->loadMinimalComponentsFile();
+//
+//		$this->twigCompiler->compileTwig();
+//
+//		$calls = $this->mockTwig->getCalls("renderFile");
+//
+//		$this->assertInstanceOf("\\ThemeViz\\Data", $calls[0][1]);
+//	}
 }

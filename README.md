@@ -1,25 +1,28 @@
 # ThemeBrowserTesting
 
-Installation:
-
-Installation:
+## Installation
 
 ```bash
 composer install
 chmod +x run.sh
 ```
 
-Usage:
+## Usage
 
-```bash
-./run.sh /path/to/theme
-```
-
-Rebuild the app:
+### Build diff summary
 
 ```bash
 docker-compose build
+./run.sh /path/to/theme
 ```
+
+### Run style guide
+
+```bash
+php -S localhost:3333
+```
+
+## Etc
 
 Run the app and jump into terminal:
 

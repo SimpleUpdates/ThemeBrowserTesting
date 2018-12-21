@@ -1,20 +1,20 @@
 <?php
 
-final class TestRenderer extends ThemeViz\TestCase
+final class TestApp extends ThemeViz\TestCase
 {
-    /** @var \ThemeViz\Renderer $renderer */
-    private $renderer;
+    /** @var \ThemeViz\App $app */
+    private $app;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->renderer = $this->factory->getRenderer();
+        $this->app = $this->factory->getApp();
     }
 
     public function testRetrievesConfigFile()
     {
-        $this->renderer->compile();
+        $this->app->compile();
 
         $this->assertTrue($this->mockFilesystem->wasMethodCalledWith(
             "getFile",
@@ -26,7 +26,7 @@ final class TestRenderer extends ThemeViz\TestCase
     {
         $this->mockFilesystem->loadComponentsFileFromFilesystem("testComponentsFile1.json");
 
-        $this->renderer->compile();
+        $this->app->compile();
 
         $callback = function ($carry, $call) {
             $templateFile = $call[0];
@@ -41,7 +41,7 @@ final class TestRenderer extends ThemeViz\TestCase
     {
         $this->loadMinimalComponentsFile();
 
-        $this->renderer->compile();
+        $this->app->compile();
 
         $this->assertTrue(
             $this->mockLess->wasMethodCalledWith(
@@ -56,7 +56,7 @@ final class TestRenderer extends ThemeViz\TestCase
     {
         $this->loadMinimalComponentsFile();
 
-        $this->renderer->compile();
+        $this->app->compile();
 
         $this->assertTrue($this->mockLess->wasMethodCalled("getCss"));
     }
@@ -65,7 +65,7 @@ final class TestRenderer extends ThemeViz\TestCase
     {
         $this->mockFilesystem->loadComponentsFileFromFilesystem("testComponentsFile1.json");
 
-        $this->renderer->compile();
+        $this->app->compile();
 
         $this->assertTrue($this->mockFilesystem->wasMethodCalledWith(
             "getFile",
@@ -82,7 +82,7 @@ final class TestRenderer extends ThemeViz\TestCase
 
         $this->mockFilesystem->setReturnValue("getFile", "base_less");
 
-        $this->renderer->compile();
+        $this->app->compile();
 
         $this->mockLess->assertMethodCalledWith(
             "parse",
@@ -96,11 +96,11 @@ final class TestRenderer extends ThemeViz\TestCase
 
         $this->mockTwig->setReturnValue("renderFile", "rendered_layout");
 
-        $this->renderer->compile();
+        $this->app->compile();
 
         $this->assertTrue($this->mockFilesystem->wasMethodCalledWith(
             "fileForceContents",
-            THEMEVIZ_BASE_PATH . "/build/pull/html/path/to/file--ScenarioName.twig",
+            THEMEVIZ_BASE_PATH . "/build/head/html/path/to/file--ScenarioName.twig",
             "rendered_layout"
         ));
     }
@@ -111,7 +111,7 @@ final class TestRenderer extends ThemeViz\TestCase
 
         $this->mockTwig->setReturnValue("render", "rendered_layout");
 
-        $this->renderer->compile();
+        $this->app->compile();
 
         $this->mockFilesystem->assertMethodCalledWith(
             "deleteTree",
@@ -123,7 +123,7 @@ final class TestRenderer extends ThemeViz\TestCase
     {
         $this->loadMinimalComponentsFile();
 
-        $this->renderer->compile();
+        $this->app->compile();
 
         $this->mockFilesystem->assertMethodCalledWith("getFile", $this->themePath . "/theme.conf");
     }
@@ -142,7 +142,7 @@ final class TestRenderer extends ThemeViz\TestCase
             ]
         ]);
 
-        $this->renderer->compile();
+        $this->app->compile();
 
         $this->mockLess->assertCallsContain(
             "parse",
@@ -164,7 +164,7 @@ final class TestRenderer extends ThemeViz\TestCase
             ]
         ]);
 
-        $this->renderer->compile();
+        $this->app->compile();
 
         $this->mockLess->assertCallsContain(
             "parse",
@@ -191,7 +191,7 @@ final class TestRenderer extends ThemeViz\TestCase
             ]
         ]);
 
-        $this->renderer->compile();
+        $this->app->compile();
 
         $this->mockLess->assertCallsContain(
             "parse",
@@ -211,11 +211,11 @@ final class TestRenderer extends ThemeViz\TestCase
             ]
         ]);
 
-        $this->renderer->compile();
+        $this->app->compile();
 
         $this->mockTwig->assertAnyCallMatches("renderFile", function ($carry, $call) {
             $data = $call[1];
-            $useBootstrap = (!is_array($data)) ? $data->themeviz_use_bootstrap() : FALSE;
+            $useBootstrap = $data["themeviz_use_bootstrap"] ?? FALSE;
 
             return $carry || $useBootstrap;
         });
@@ -227,12 +227,12 @@ final class TestRenderer extends ThemeViz\TestCase
 
         $this->mockLess->setReturnValue("getCss", "compiled_css");
 
-        $this->renderer->compile();
+        $this->app->compile();
 
         $this->mockTwig->assertAnyCallMatches("renderFile", function($carry, $call) {
            $data = $call[1];
 
-           return $carry || $data->themeviz_css() === "compiled_css";
+           return $carry || $data["themeviz_css"] === "compiled_css";
         });
     }
 
@@ -240,10 +240,10 @@ final class TestRenderer extends ThemeViz\TestCase
     {
         $this->loadMinimalComponentsFile();
 
-        $this->renderer->compile();
+        $this->app->compile();
 
         $this->mockFilesystem->assertMethodCalledWith(
-            "makeTree", THEMEVIZ_BASE_PATH . "/build/pull/shots"
+            "makeTree", THEMEVIZ_BASE_PATH . "/build/head/shots"
         );
     }
 
@@ -251,11 +251,11 @@ final class TestRenderer extends ThemeViz\TestCase
     {
         $this->loadMinimalComponentsFile();
 
-        $this->renderer->compile();
+        $this->app->compile();
 
         $this->mockFilesystem->assertMethodCalledWith(
             "scanDir",
-            THEMEVIZ_BASE_PATH . "/build/pull/html"
+            THEMEVIZ_BASE_PATH . "/build/head/html"
         );
     }
 
@@ -263,7 +263,7 @@ final class TestRenderer extends ThemeViz\TestCase
     {
         $this->loadMinimalComponentsFile();
 
-        $this->renderer->compile();
+        $this->app->compile();
 
         $this->mockGit->assertMethodCalledWith(
             "saveState",
@@ -275,7 +275,7 @@ final class TestRenderer extends ThemeViz\TestCase
     {
         $this->loadMinimalComponentsFile();
 
-        $this->renderer->compile();
+        $this->app->compile();
 
         $this->mockGit->assertMethodCalledWith(
             "checkoutRemoteBranch",
@@ -288,7 +288,7 @@ final class TestRenderer extends ThemeViz\TestCase
     {
         $this->loadMinimalComponentsFile();
 
-        $this->renderer->compile();
+        $this->app->compile();
 
         $this->mockFilesystem->assertMethodCalledWith(
             "scanDir",
@@ -300,7 +300,7 @@ final class TestRenderer extends ThemeViz\TestCase
     {
         $this->loadMinimalComponentsFile();
 
-        $this->renderer->compile();
+        $this->app->compile();
 
         $this->mockGit->assertMethodCalledWith(
             "resetState",
@@ -312,7 +312,7 @@ final class TestRenderer extends ThemeViz\TestCase
     {
         $this->loadMinimalComponentsFile();
 
-        $this->renderer->compile();
+        $this->app->compile();
 
         $this->mockGit->assertMethodCalledWith(
             "pull",
@@ -327,7 +327,7 @@ final class TestRenderer extends ThemeViz\TestCase
 
         $this->mockFilesystem->setReturnValue("scanDir", ["component"]);
 
-        $this->renderer->compile();
+        $this->app->compile();
 
         $this->mockPixelmatch->assertMethodCalled("makeDiff");
     }
@@ -338,10 +338,67 @@ final class TestRenderer extends ThemeViz\TestCase
 
         $this->mockFilesystem->setReturnValue("scanDir", ["component"]);
 
-        $this->renderer->compile();
+        $this->app->compile();
 
         $this->mockTwig->assertAnyCallMatches("renderFile", function($carry, $args) {
             return $args[0] === "summary.twig" || $carry;
         });
     }
+
+    public function testBuildHeadDeletesHeadTree()
+	{
+		$this->loadMinimalComponentsFile();
+
+		$this->app->buildHead();
+
+		$this->mockFilesystem->assertMethodCalledWith(
+			"deleteTree",
+			THEMEVIZ_BASE_PATH . "/build/head"
+		);
+	}
+
+	public function testBuildProductionDeletesProductionTree()
+	{
+		$this->loadMinimalComponentsFile();
+
+		$this->app->buildProduction();
+
+		$this->mockFilesystem->assertMethodCalledWith(
+			"deleteTree",
+			THEMEVIZ_BASE_PATH . "/build/production"
+		);
+	}
+
+	public function testBuildProductionChecksOutProduction()
+	{
+		$this->loadMinimalComponentsFile();
+
+		$this->app->buildProduction();
+
+		$this->mockGit->assertMethodCalled("saveState");
+		$this->mockGit->assertMethodCalled("checkoutRemoteBranch");
+		$this->mockGit->assertMethodCalled("pull");
+		$this->mockGit->assertMethodCalled("resetState");
+	}
+
+	public function testBuildStyleGuideBuildsHead()
+	{
+		$this->loadMinimalComponentsFile();
+
+		$this->app->buildStyleGuide();
+
+		$this->mockFilesystem->assertMethodCalledWith(
+			"deleteTree",
+			THEMEVIZ_BASE_PATH . "/build/head"
+		);
+	}
+
+	public function testBuildStyleGuideCompilesStyleGuide()
+	{
+		$this->loadMinimalComponentsFile();
+
+		$this->app->buildStyleGuide();
+
+		$this->mockTwig->assertTwigTemplateRendered("styleGuide.twig");
+	}
 }

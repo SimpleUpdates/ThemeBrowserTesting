@@ -22,8 +22,7 @@ class Less
     /**
      * @param string $filename
      * @param string $uriRoot
-     * @throws \Less_Exception_Parser
-     */
+	 */
     public function parseFile(string $filename, string $uriRoot): void
     {
         $this->less->parseFile($filename, $uriRoot);

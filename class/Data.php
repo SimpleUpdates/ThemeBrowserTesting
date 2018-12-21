@@ -32,6 +32,18 @@ class Data
 		return $this->getReturnValue() ?? $this;
 	}
 
+	public function toArray()
+	{
+		return $this->data;
+	}
+
+	public function addData(array $data)
+	{
+		$newMatchers = $this->makeMatchers($data);
+
+		$this->matchers = array_merge($this->matchers, $newMatchers);
+	}
+
 	private function makeMatchers(array $data)
 	{
 		$keys = array_keys($data);

@@ -2,25 +2,31 @@
 
 namespace ThemeViz;
 
+/**
+ * @method getApp()
+ * @method getPage_Summary()
+ */
 class Factory
 {
-    /** @var Filesystem $filesystem */
-    private $filesystem;
+	private $namespace = __NAMESPACE__;
 
-    /** @var Firefox $firefox */
-    private $firefox;
+	/** @var Filesystem $filesystem */
+	private $filesystem;
 
-    /** @var Git $git */
-    private $git;
+	/** @var Firefox $firefox */
+	private $firefox;
 
-    /** @var Less $less */
-    private $less;
+	/** @var Git $git */
+	private $git;
 
-    /** @var Pixelmatch $pixelmatch */
-    private $pixelmatch;
+	/** @var Less $less */
+	private $less;
 
-    /** @var Twig $twig */
-    private $twig;
+	/** @var Pixelmatch $pixelmatch */
+	private $pixelmatch;
+
+	/** @var Twig $twig */
+	private $twig;
 
 	/**
 	 * Factory constructor.
@@ -32,21 +38,21 @@ class Factory
 	 * @param Twig|null $twig
 	 */
 	public function __construct(
-        Filesystem $filesystem = null,
-        Firefox $firefox = null,
-        Git $git = null,
-        Less $less = null,
-        Pixelmatch $pixelmatch = null,
-        Twig $twig = null
-    )
-    {
-        $this->filesystem = $filesystem;
-        $this->firefox = $firefox;
-        $this->git = $git;
-        $this->less = $less;
-        $this->pixelmatch = $pixelmatch;
-        $this->twig = $twig;
-    }
+		Filesystem $filesystem = null,
+		Firefox $firefox = null,
+		Git $git = null,
+		Less $less = null,
+		Pixelmatch $pixelmatch = null,
+		Twig $twig = null
+	)
+	{
+		$this->filesystem = $filesystem;
+		$this->firefox = $firefox;
+		$this->git = $git;
+		$this->less = $less;
+		$this->pixelmatch = $pixelmatch;
+		$this->twig = $twig;
+	}
 
 	/**
 	 * @param $method
@@ -56,36 +62,31 @@ class Factory
 	 */
 	public function __call($method, $args = [])
 	{
-		$isGet = substr( $method, 0, 3 ) === "get";
-
+		$isGet = substr($method, 0, 3) === "get";
 		if (!$isGet) return null;
-
 		$name = substr($method, 3, strlen($method) - 3);
-		$dependencyNames = $this->getDependencyNames($name);
-		$dependencies = array_map(function($dependencyName) {
+		$qualifiedName = $this->getQualifiedName($name);
+		$dependencyNames = $this->getDependencyNames($qualifiedName);
+		$dependencies = array_map(function ($dependencyName) {
 			$methodName = "get$dependencyName";
 			return $this->$methodName();
 		}, $dependencyNames);
-
-		return $this->getObject($name, ...$dependencies);
+		return $this->getObject($qualifiedName, ...$dependencies);
 	}
 
 	/**
-	 * @param $name
+	 * @param $className
 	 * @return array|mixed
 	 * @throws \ReflectionException
 	 */
-	private function getDependencyNames($name)
+	private function getDependencyNames($className)
 	{
-		$simpleName = $this->getSimpleClassName($name);
-		$reflection = new \ReflectionClass("\\ThemeViz\\$simpleName");
+		$reflection = new \ReflectionClass($className);
 		$constructor = $reflection->getConstructor();
 		$params = ($constructor) ? $constructor->getParameters() : [];
-
-		return array_map(function($param) {
+		return array_map(function (\ReflectionParameter $param) {
 			$name = $param->getClass()->name;
-
-			return $this->getSimpleClassName($name);
+			return $this->getQualifiedName($name);
 		}, $params);
 	}
 
@@ -93,27 +94,56 @@ class Factory
 	 * @param $name
 	 * @return string
 	 */
-	private function getSimpleClassName($name): string
+	private function getQualifiedName($name)
 	{
-		$nameFragments = explode("\\", $name);
+		$isQualified = strpos(trim($name, "\\"), "$this->namespace\\") === 0;
+		if ($isQualified) return $name;
+		$isNamespacedMethod = strpos($name, "_") !== false;
+		if ($isNamespacedMethod) return $this->convertNamespacedMethodNameToQualifiedName($name);
+		return "\\$this->namespace\\$name";
+	}
 
-		return end($nameFragments);
+	/**
+	 * @param string $class
+	 * @param array ...$dependencies
+	 * @return mixed
+	 */
+	private function getObject($class, ...$dependencies)
+	{
+		$propertyName = $this->getPropertyName($class);
+
+		if (!isset($this->$propertyName)) $this->$propertyName = new $class(...$dependencies);
+
+		return $this->$propertyName;
 	}
 
 	/**
 	 * @param $class
-	 * @param mixed ...$dependencies
-	 * @return mixed
+	 * @return string
 	 */
-	private function getObject($class, ...$dependencies)
-    {
-        $fullClassName = "\\ThemeViz\\$class";
-        $propertyName = lcfirst($class);
+	private function getPropertyName($class)
+	{
+		return lcfirst($this->getSimpleClassName($class));
+	}
 
-        if (! isset($this->$propertyName)) {
-            $this->$propertyName = new $fullClassName(...$dependencies);
-        }
+	/**
+	 * @param $name
+	 * @return string
+	 */
+	private function getSimpleClassName($name)
+	{
+		$nameFragments = explode("\\", $name);
+		return end($nameFragments);
+	}
 
-        return $this->$propertyName;
-    }
+	/**
+	 * @param $methodName
+	 * @return string
+	 */
+	private function convertNamespacedMethodNameToQualifiedName($methodName)
+	{
+		$fragments = explode("_", $methodName);
+		$partiallyQualifiedName = implode("\\", $fragments);
+		return "\\$this->namespace\\$partiallyQualifiedName";
+	}
 }

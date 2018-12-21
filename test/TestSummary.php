@@ -1,27 +1,27 @@
 <?php
 
-final class TestSummaryCompiler extends ThemeViz\TestCase
+final class TestSummary extends ThemeViz\TestCase
 {
-    /** @var \ThemeViz\SummaryCompiler $summaryCompiler */
-    private $summaryCompiler;
+    /** @var \ThemeViz\Page\Summary $summary */
+    private $summary;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->summaryCompiler = $this->factory->getSummaryCompiler();
+        $this->summary = $this->factory->getPage_Summary();
     }
 
     public function testRendersSummary()
     {
-        $this->summaryCompiler->compile();
+        $this->summary->compile();
 
         $this->mockTwig->assertMethodCalled("renderFile");
     }
 
     public function testScansDiffs()
     {
-        $this->summaryCompiler->compile();
+        $this->summary->compile();
 
         $this->mockFilesystem->assertMethodCalledWith(
             "scanDir",
@@ -33,16 +33,16 @@ final class TestSummaryCompiler extends ThemeViz\TestCase
     {
         $this->mockFilesystem->setReturnValue("scanDir", ["component.png"]);
 
-        $this->summaryCompiler->compile();
+        $this->summary->compile();
 
-        $data = new ThemeViz\Data(["themeviz_components" => [
+        $data = ["themeviz_components" => [
 			[
 				"name" => "component.png",
 				"expected" => "production/shots/component.png",
-				"actual" => "pull/shots/component.png",
+				"actual" => "head/shots/component.png",
 				"diff" => "diffs/component.png"
 			]
-		]]);
+		]];
 
         $this->mockTwig->assertMethodCalledWith(
             "renderFile",
@@ -55,7 +55,7 @@ final class TestSummaryCompiler extends ThemeViz\TestCase
     {
         $this->mockTwig->setReturnValue("renderFile", "rendered_twig");
 
-        $this->summaryCompiler->compile();
+        $this->summary->compile();
 
         $this->mockFilesystem->assertMethodCalledWith(
             "fileForceContents",

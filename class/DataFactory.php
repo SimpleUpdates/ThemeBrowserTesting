@@ -18,7 +18,9 @@ class DataFactory
 	public function makeData($array) {
 		$collectionData = $this->getCollectionData();
 
-		return new Data($array, $collectionData);
+		$dataObject = new Data($array, $collectionData);
+
+		return $dataObject->toArray();
 	}
 
 	/**

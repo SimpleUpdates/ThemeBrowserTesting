@@ -172,12 +172,12 @@ trait Stub
         return in_array($args, $this->getCalls($method));
     }
 
-    public function assertAnyCallMatches(string $method, callable $callable)
+    public function assertAnyCallMatches(string $method, callable $callable, $message = null)
     {
         $calls = $this->getCalls($method);
         $bool = array_reduce($calls, $callable, FALSE);
         $haystackExport = var_export($calls, TRUE);
-        $message = "Failed asserting any call matches callback.\r\n\r\nHaystack:\r\n$haystackExport";
+        $message = ($message) ? $message : "Failed asserting any call matches callback.\r\n\r\nHaystack:\r\n$haystackExport";
         $this->testCase->assertTrue($bool, $message);
     }
 

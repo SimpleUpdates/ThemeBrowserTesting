@@ -15,4 +15,13 @@ class StubTwig extends Twig
     {
         return $this->handleCall(__FUNCTION__, func_get_args());
     }
+
+	public function assertTwigTemplateRendered($template)
+	{
+		$message = "Failed to assert that $template was rendered";
+		$this->assertAnyCallMatches("renderFile", function($carry, $call) use($template) {
+			$callTemplate = $call[0];
+			return $carry || ($callTemplate === $template);
+		}, $message);
+	}
 }

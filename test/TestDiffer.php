@@ -38,7 +38,7 @@ final class TestDiffer extends ThemeViz\TestCase
 
         $this->mockFilesystem->assertMethodCalledWith(
             "scanDir",
-            THEMEVIZ_BASE_PATH . "/build/pull/shots"
+            THEMEVIZ_BASE_PATH . "/build/head/shots"
         );
     }
 
@@ -51,7 +51,7 @@ final class TestDiffer extends ThemeViz\TestCase
         $this->mockPixelmatch->assertMethodCalledWith(
             "makeDiff",
             THEMEVIZ_BASE_PATH . "/build/production/shots/component.png",
-            THEMEVIZ_BASE_PATH . "/build/pull/shots/component.png",
+            THEMEVIZ_BASE_PATH . "/build/head/shots/component.png",
             THEMEVIZ_BASE_PATH . "/build/diffs/component.png"
         );
     }

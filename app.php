@@ -16,6 +16,6 @@ if (!THEMEVIZ_THEME_PATH) {
 }
 
 $factory = new Factory();
-$renderer = $factory->getRenderer();
+$app = $factory->getApp();
 
-$renderer->compile();
+$app->compile();

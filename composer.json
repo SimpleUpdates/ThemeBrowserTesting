@@ -10,7 +10,9 @@
     "twig/twig": "^2.5",
     "phpunit/phpunit": "^7.4",
     "ext-json": "*",
-    "ext-readline": "*"
+    "ext-readline": "*",
+    "slim/slim": "^3.0",
+    "docopt/docopt": "^1.0"
   },
   "autoload": {
     "psr-4": {

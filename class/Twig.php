@@ -18,6 +18,7 @@ class Twig
         ]);
 
         $this->twig = new \Twig_Environment($this->filesystemLoader, $this->twigOptions);
+		$this->twig->addExtension(new \Twig_Extension_Debug());
 
         $this->registerFunction(
             "getIcon",
