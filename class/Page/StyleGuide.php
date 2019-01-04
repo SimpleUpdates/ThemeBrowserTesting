@@ -3,25 +3,13 @@
 namespace ThemeViz\Page;
 
 
-use ThemeViz\DataFactory;
-use ThemeViz\Filesystem;
 use ThemeViz\Page;
-use ThemeViz\Twig;
 
 class StyleGuide extends Page
 {
-	/** @var Filesystem $filesystem */
-	private $filesystem;
-
 	protected $template = "styleGuide.twig";
-	protected $buildPath = "styleGuide.html";
-
-	public function __construct(DataFactory $dataFactory, Filesystem $filesystem, Twig $twig)
-	{
-		parent::__construct($dataFactory, $filesystem, $twig);
-
-		$this->filesystem = $filesystem;
-	}
+	protected $stylesheet = "styleGuide.less";
+ 	protected $buildPath = "styleGuide.html";
 
 	protected function getDataArray() {
 		$paths = $this->filesystem->findPathsMatchingRecursive(

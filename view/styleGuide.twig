@@ -1,4 +1,64 @@
+<html>
+<head>
+    <title>Style Guide</title>
+    <style>{{ themeviz_css|raw }}</style>
+</head>
+<body class="styleguide">
 {% for component in themeviz_components %}
-	<h1>{{ component.name }}</h1>
-	<iframe src="/html?path={{ component.html|e("url") }}" frameborder="0"></iframe>
+    <div class="component">
+        <h1>{{ component.name }}</h1>
+        <iframe src="{{ component.html }}" frameborder="0"></iframe>
+    </div>
 {% endfor %}
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+<script src="{{ themeviz_base_path }}/third-party/iframe-resizer/js/iframeResizer.min.js"></script>
+
+
+<script>
+    jQuery( ".component" ).resizable( {
+        resize: function ( event, ui ) {
+            ui.element.addClass( "resized" );
+        },
+        start: function ( event, ui ) {
+            $( '<div class="ui-resizable-iframe-fix"></div>' )
+                .css({
+                    width: "100vw", height: "100vh",
+                    position: "absolute", zIndex: 1000
+                })
+                .css( $( this ).offset() )
+                .appendTo( "body" );
+        },
+        stop: function ( event, ui ) {
+            $( "div.ui-resizable-iframe-fix" ).remove();
+        }
+    });
+
+    jQuery( ".component .reset" ).click(function () {
+        var component = $( this ).closest( ".component" );
+        component.removeAttr( "style" ).removeClass( "resized" );
+    });
+
+    jQuery( ".component-iframe" ).addClass( "loading" );
+
+    jQuery( "iframe" ).on( "load", function() {
+        jQuery( this ).closest( ".component-iframe" ).removeClass( "loading" );
+    });
+
+    jQuery( ".nav-pills a" ).on("click", function() {
+        var component = $( this ).closest( ".component" );
+        setTimeout( function() {
+            // trigger iframe resize here
+        }, 300 );
+    });
+
+    iFrameResize()
+</script>
+</body>
+</html>

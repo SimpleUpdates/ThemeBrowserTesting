@@ -1,0 +1,142 @@
+.styleguide {
+  min-height: 100vh;
+  background: white;
+  pre code {
+    border-radius: 4px;
+  }
+  iframe {
+    width: 100%;
+    min-height: 200px;
+    display: block;
+  }
+  .navbar {
+    position: sticky;
+    .form-group {
+      width: auto;
+    }
+    .navbar-right {
+      margin-right: 0;
+    }
+  }
+  .component {
+    margin-left: 20px;
+    margin-right: 20px;
+    > .panel-heading {
+      display: flex;
+      align-items: center;
+      .panel-nav {
+        flex: 1 0 auto;
+      }
+      h3 {
+        line-height: 1.5rem;
+        margin-bottom: 5px;
+        a {
+          color: black;
+        }
+      }
+      .reset, .refresh, .background-colors {
+        margin-left: 5px;
+      }
+      .background-colors {
+        padding-left: 0;
+        margin-bottom: 0;
+        display: flex;
+        align-items: center;
+      }
+      .background-colors > li {
+        display: inline-block;
+        a {
+          display: block;
+          width: 20px;
+          height: 20px;
+          border-radius: 4px;
+          margin-right: 5px;
+          border: 2px solid transparent;
+        }
+        a.active {
+          border: 2px solid #337ab7;
+        }
+      }
+    }
+    .nav-pills {
+      flex: 1;
+      margin-top: .3rem;
+      li:first-child:nth-last-child(1) {
+        display: none;
+      }
+      a {
+        padding: 0 .5rem;
+        margin-right: .25rem;
+        height: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+    .nav-pills > li.active > a {
+      color: white !important;
+    }
+    > .panel-body {
+      padding: 0;
+      .component-iframe {
+        position: relative;
+      }
+    }
+    &:only-child {
+      height: calc(~"100vh - 91px");
+    }
+    &.resized, &:only-child {
+      display: flex;
+      flex-direction: column;
+      > .panel-body {
+        flex: 1 1 auto;
+        overflow: scroll;
+        padding: 0;
+        display: flex;
+        .tab-content,
+        .tab-pane,
+        .component-iframe,
+        .iframe,
+        iframe {
+          display: flex;
+          flex: 1 0 100%;
+        }
+      }
+    }
+  }
+  @keyframes spinner {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .loading:before {
+    content: '';
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, .5);
+  }
+  .loading:after {
+    @color: white;
+    @size: 40px;
+
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+    z-index: 100;
+    top: 50%;
+    left: 50%;
+    width: @size;
+    height: @size;
+    margin-top: -@size/2;
+    margin-left: -@size/2;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: @color;
+    border-bottom-color: @color;
+    animation: spinner .8s ease infinite;
+  }
+}

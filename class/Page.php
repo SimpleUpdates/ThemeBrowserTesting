@@ -6,21 +6,26 @@ namespace ThemeViz;
 abstract class Page
 {
 	/** @var DataFactory $dataFactory */
-	private $dataFactory;
+	protected $dataFactory;
 
 	/** @var Filesystem $filesystem */
-	private $filesystem;
+	protected $filesystem;
+
+	/** @var Less */
+	protected $less;
 
 	/** @var Twig $twig */
-	private $twig;
+	protected $twig;
 
 	protected $template;
+	protected $stylesheet;
 	protected $buildPath;
 
-	public function __construct(DataFactory $dataFactory, Filesystem $filesystem, Twig $twig)
+	public function __construct(DataFactory $dataFactory, Filesystem $filesystem, Less $less, Twig $twig)
 	{
 		$this->dataFactory = $dataFactory;
 		$this->filesystem = $filesystem;
+		$this->less = $less;
 		$this->twig = $twig;
 	}
 
@@ -28,6 +33,15 @@ abstract class Page
 	{
 		$dataArray = $this->getDataArray();
 		$data = $this->dataFactory->makeData($dataArray);
+
+		if ($this->stylesheet) {
+			$styleFolder = THEMEVIZ_BASE_PATH . "/style";
+			$filePath = "$styleFolder/$this->stylesheet";
+			$this->less->parseFile($filePath, $styleFolder);
+			$css = $this->less->getCss();
+			$dataArray["themeviz_css"] = $css;
+		}
+
 		$html = $this->twig->renderFile($this->template, $dataArray);
 
 		$this->filesystem->fileForceContents(

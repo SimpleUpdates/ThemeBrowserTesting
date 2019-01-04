@@ -3,25 +3,12 @@
 namespace ThemeViz\Page;
 
 
-use ThemeViz\DataFactory;
-use ThemeViz\Filesystem;
 use ThemeViz\Page;
-use ThemeViz\Twig;
 
 class Summary extends Page
 {
-    /** @var Filesystem $filesystem */
-    private $filesystem;
-
     protected $template = "summary.twig";
     protected $buildPath = "summary.html";
-
-    public function __construct(DataFactory $dataFactory, Filesystem $filesystem, Twig $twig)
-    {
-    	parent::__construct($dataFactory, $filesystem, $twig);
-
-        $this->filesystem = $filesystem;
-    }
 
     protected function getDataArray()
     {

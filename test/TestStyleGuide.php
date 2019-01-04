@@ -28,12 +28,15 @@ final class TestStyleGuide extends ThemeViz\TestCase
 
 		$this->styleGuide->compile();
 
-		$data = ["themeviz_components" => [
-			[
-				"name" => "component_file",
-				"html" => "component_file"
-			]
-		]];
+		$data = [
+			"themeviz_components" => [
+				[
+					"name" => "component_file",
+					"html" => "component_file"
+				]
+			],
+			"themeviz_css" => null
+		];
 
 		$this->mockTwig->assertMethodCalledWith(
 			"renderFile",
@@ -64,17 +67,51 @@ final class TestStyleGuide extends ThemeViz\TestCase
 
 		$this->styleGuide->compile();
 
-		$data = ["themeviz_components" => [
-			[
-				"name" => "atom-sitename--Configured.html",
-				"html" => $path
-			]
-		]];
+		$data = [
+			"themeviz_components" => [
+				[
+					"name" => "atom-sitename--Configured.html",
+					"html" => $path
+				]
+			],
+			"themeviz_css" => null
+		];
 
 		$this->mockTwig->assertMethodCalledWith(
 			"renderFile",
 			"styleGuide.twig",
 			$data
+		);
+	}
+
+	public function testRendersCss()
+	{
+		$this->mockLess->setReturnValue("getCss", "compiled_css");
+
+		$this->styleGuide->compile();
+
+		$data = [
+			"themeviz_components" => [],
+			"themeviz_css" => "compiled_css"
+		];
+
+		$this->mockTwig->assertMethodCalledWith(
+			"renderFile",
+			"styleGuide.twig",
+			$data
+		);
+	}
+
+	public function testParsesLess()
+	{
+		$this->styleGuide->compile();
+
+		$basePath = THEMEVIZ_BASE_PATH . "/style";
+
+		$this->mockLess->assertMethodCalledWith(
+			"parseFile",
+			"$basePath/styleGuide.less",
+			$basePath
 		);
 	}
 }

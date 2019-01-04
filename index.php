@@ -6,7 +6,10 @@ define("THEMEVIZ_BASE_PATH", dirname(__FILE__));
 include_once(THEMEVIZ_BASE_PATH . "/vendor/autoload.php");
 
 $app = new \Slim\App([
-	"debug" => true
+	"debug" => true,
+	"settings" => [
+		"displayErrorDetails" => true
+	]
 ]);
 
 use Psr\Http\Message\RequestInterface as Request;
