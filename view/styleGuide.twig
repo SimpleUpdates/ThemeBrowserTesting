@@ -1,6 +1,8 @@
+{% set title = "StyleGuide | "~themeviz_theme_path|split("/")|last %}
+
 <html>
 <head>
-	<title>Style Guide</title>
+	<title>{{ title }}</title>
 	<style>{{ themeviz_css|raw }}</style>
 
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -17,7 +19,7 @@
 <body class="styleguide">
 
 <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
-	<a class="navbar-brand" href="#">StyleGuide</a>
+	<a class="navbar-brand" href="#">{{ title }}</a>
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
 			aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
@@ -72,6 +74,42 @@
 </div>
 
 <script>
+    jQuery.ajax({
+        url: "http://localhost:3333/status"
+    }).done(function (data) {
+        if (data === "OK") {
+            jQuery("#loadForm").removeClass("hidden");
+        }
+    });
+
+    jQuery("#loadForm button").click(function (e) {
+        e.preventDefault();
+        var path = jQuery("#loadForm input").val(),
+            action = "http://localhost:3333/?theme=" + encodeURIComponent(path);
+        jQuery.ajax({
+            url: action
+        }).done(function (data) {
+            location.reload();
+        });
+    });
+
+    var filterString = getQueryString("filter");
+    if (filterString) {
+        jQuery("#filterForm input").val(filterString);
+        jQuery(".component").each(function(i, component) {
+            var heading = jQuery(component).find("h1");
+            if (heading.text().indexOf(filterString) === -1) {
+                component.remove();
+            }
+        });
+	}
+
+    function getQueryString(key) {
+        key = key.replace(/[*+?^$.\[\]{}()|\\\/]/g, "\\$&"); // escape RegEx meta chars
+        var match = location.search.match(new RegExp("[?&]"+key+"=([^&]+)(&|$)"));
+        return match && decodeURIComponent(match[1].replace(/\+/g, " "));
+    }
+
     jQuery(".component").resizable({
         resize: function (event, ui) {
             ui.element.addClass("resized");
@@ -109,42 +147,6 @@
     });
 
     iFrameResize();
-
-    jQuery.ajax({
-        url: "http://localhost:3333/status"
-    }).done(function (data) {
-        if (data === "OK") {
-            jQuery("#loadForm").removeClass("hidden");
-        }
-    });
-
-    jQuery("#loadForm button").click(function (e) {
-        e.preventDefault();
-        var path = jQuery("#loadForm input").val(),
-            action = "http://localhost:3333/?theme=" + encodeURIComponent(path);
-        jQuery.ajax({
-            url: action
-        }).done(function (data) {
-            location.reload();
-        });
-    });
-
-    var filterString = getQueryString("filter");
-    if (filterString) {
-        jQuery("#filterForm input").val(filterString);
-        jQuery(".component").each(function(i, component) {
-            var heading = jQuery(component).find("h1");
-            if (heading.text().indexOf(filterString) === -1) {
-                component.remove();
-            }
-        });
-	}
-
-    function getQueryString(key) {
-        key = key.replace(/[*+?^$.\[\]{}()|\\\/]/g, "\\$&"); // escape RegEx meta chars
-        var match = location.search.match(new RegExp("[?&]"+key+"=([^&]+)(&|$)"));
-        return match && decodeURIComponent(match[1].replace(/\+/g, " "));
-    }
 </script>
 </body>
 </html>
