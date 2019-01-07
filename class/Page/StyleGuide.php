@@ -27,8 +27,7 @@ class StyleGuide extends Page
 		}, $paths ?? []);
 
 		return [
-			"themeviz_components" => $components,
-			"themeviz_theme_path" => THEMEVIZ_THEME_PATH
+			"themeviz_components" => $components
 		];
 	}
 }

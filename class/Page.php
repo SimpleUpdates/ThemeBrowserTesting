@@ -42,6 +42,10 @@ abstract class Page
 			$dataArray["themeviz_css"] = $css;
 		}
 
+		array_merge([
+			"themeviz_theme_path" => THEMEVIZ_THEME_PATH
+		], $dataArray);
+
 		$html = $this->twig->renderFile($this->template, $dataArray);
 
 		$this->filesystem->fileForceContents(

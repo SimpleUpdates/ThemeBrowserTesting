@@ -47,20 +47,29 @@
 				{#<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>#}
 			{#</li>#}
 		</ul>
-		<form id="loadForm" class="hidden form-inline my-2 my-lg-0">
+		<form id="loadForm" class="hidden form-inline my-2 my-lg-0 mr-sm-2">
 			<input class="form-control mr-sm-2" value="{{ themeviz_theme_path }}" type="text" placeholder="Theme Path">
 			<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Load</button>
+		</form>
+		<form id="filterForm" class="form-inline my-2 my-lg-0" method="get">
+			<input class="form-control mr-sm-2" type="text" placeholder="Filter" name="filter">
+			<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Filter</button>
 		</form>
 	</div>
 </nav>
 
-{% for component in themeviz_components %}
-	<div class="component">
-		<h1>{{ component.name }}</h1>
-		<iframe src="{{ component.html }}" frameborder="0"></iframe>
-	</div>
-{% endfor %}
-
+<div class="components">
+	{% for component in themeviz_components %}
+		<div class="component panel panel-default">
+			<div class="panel-heading">
+				<h1><a href="?filter={{ component.name|e("url") }}">{{ component.name }}</a></h1>
+			</div>
+			<div class="panel-body">
+				<iframe src="{{ component.html }}" frameborder="0"></iframe>
+			</div>
+		</div>
+	{% endfor %}
+</div>
 
 <script>
     jQuery(".component").resizable({
@@ -119,6 +128,23 @@
             location.reload();
         });
     });
+
+    var filterString = getQueryString("filter");
+    if (filterString) {
+        jQuery("#filterForm input").val(filterString);
+        jQuery(".component").each(function(i, component) {
+            var heading = jQuery(component).find("h1");
+            if (heading.text().indexOf(filterString) === -1) {
+                component.remove();
+            }
+        });
+	}
+
+    function getQueryString(key) {
+        key = key.replace(/[*+?^$.\[\]{}()|\\\/]/g, "\\$&"); // escape RegEx meta chars
+        var match = location.search.match(new RegExp("[?&]"+key+"=([^&]+)(&|$)"));
+        return match && decodeURIComponent(match[1].replace(/\+/g, " "));
+    }
 </script>
 </body>
 </html>
