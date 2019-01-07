@@ -401,4 +401,13 @@ final class TestApp extends ThemeViz\TestCase
 
 		$this->mockTwig->assertTwigTemplateRendered("styleGuide.twig");
 	}
+
+	public function testCompileCompilesStyleGuide()
+	{
+		$this->loadMinimalComponentsFile();
+
+		$this->app->compile();
+
+		$this->mockTwig->assertTwigTemplateRendered("styleGuide.twig");
+	}
 }
