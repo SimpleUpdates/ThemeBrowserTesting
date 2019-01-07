@@ -24,15 +24,15 @@ final class TestStyleGuide extends ThemeViz\TestCase
 
 	public function testPassesComponentsToTemplate()
 	{
-		$this->mockFilesystem->setReturnValue("findPathsMatchingRecursive", ["component_file"]);
+		$this->mockFilesystem->setReturnValue("findPathsMatchingRecursive", ["/path/to/build/file"]);
 
 		$this->styleGuide->compile();
 
 		$data = [
 			"themeviz_components" => [
 				[
-					"name" => "component_file",
-					"html" => "component_file"
+					"name" => "file",
+					"html" => "file"
 				]
 			],
 			"themeviz_css" => null
@@ -56,7 +56,7 @@ final class TestStyleGuide extends ThemeViz\TestCase
 		);
 	}
 
-	public function testSimplifiesComponentName()
+	public function testSimplifiesComponentNameAndPath()
 	{
 		$path = "/Users/work/ProgrammingProjects/ThemeViz/build/head/html/partial/atom-sitename--Configured.html";
 
@@ -71,7 +71,7 @@ final class TestStyleGuide extends ThemeViz\TestCase
 			"themeviz_components" => [
 				[
 					"name" => "atom-sitename--Configured.html",
-					"html" => $path
+					"html" => "head/html/partial/atom-sitename--Configured.html"
 				]
 			],
 			"themeviz_css" => null

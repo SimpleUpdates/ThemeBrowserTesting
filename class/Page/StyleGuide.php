@@ -18,12 +18,17 @@ class StyleGuide extends Page
 		);
 
 		$components = array_map(function($path) {
+			$relativePath = explode("/build/", $path)[1];
+
 			return [
 				"name" => basename($path),
-				"html" => $path,
+				"html" => $relativePath,
 			];
 		}, $paths ?? []);
 
-		return ["themeviz_components" => $components];
+		return [
+			"themeviz_components" => $components,
+			"themeviz_theme_path" => THEMEVIZ_THEME_PATH
+		];
 	}
 }

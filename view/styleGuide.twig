@@ -1,64 +1,124 @@
 <html>
 <head>
-    <title>Style Guide</title>
-    <style>{{ themeviz_css|raw }}</style>
+	<title>Style Guide</title>
+	<style>{{ themeviz_css|raw }}</style>
+
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet"
+		  integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+			integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+			crossorigin="anonymous"></script>
+	<script src="{{ themeviz_base_path }}/third-party/iframe-resizer/js/iframeResizer.min.js"></script>
 </head>
 <body class="styleguide">
+
+<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
+	<a class="navbar-brand" href="#">StyleGuide</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+			aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+
+	<div class="collapse navbar-collapse" id="navbarSupportedContent">
+		<ul class="navbar-nav mr-auto">
+			{#<li class="nav-item active">#}
+				{#<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>#}
+			{#</li>#}
+			{#<li class="nav-item">#}
+				{#<a class="nav-link" href="#">Link</a>#}
+			{#</li>#}
+			{#<li class="nav-item dropdown">#}
+				{#<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"#}
+				   {#aria-haspopup="true" aria-expanded="false">#}
+					{#Dropdown#}
+				{#</a>#}
+				{#<div class="dropdown-menu" aria-labelledby="navbarDropdown">#}
+					{#<a class="dropdown-item" href="#">Action</a>#}
+					{#<a class="dropdown-item" href="#">Another action</a>#}
+					{#<div class="dropdown-divider"></div>#}
+					{#<a class="dropdown-item" href="#">Something else here</a>#}
+				{#</div>#}
+			{#</li>#}
+			{#<li class="nav-item">#}
+				{#<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>#}
+			{#</li>#}
+		</ul>
+		<form id="loadForm" class="hidden form-inline my-2 my-lg-0">
+			<input class="form-control mr-sm-2" value="{{ themeviz_theme_path }}" type="text" placeholder="Theme Path">
+			<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Load</button>
+		</form>
+	</div>
+</nav>
+
 {% for component in themeviz_components %}
-    <div class="component">
-        <h1>{{ component.name }}</h1>
-        <iframe src="{{ component.html }}" frameborder="0"></iframe>
-    </div>
+	<div class="component">
+		<h1>{{ component.name }}</h1>
+		<iframe src="{{ component.html }}" frameborder="0"></iframe>
+	</div>
 {% endfor %}
-
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-        crossorigin="anonymous"></script>
-<script src="{{ themeviz_base_path }}/third-party/iframe-resizer/js/iframeResizer.min.js"></script>
 
 
 <script>
-    jQuery( ".component" ).resizable( {
-        resize: function ( event, ui ) {
-            ui.element.addClass( "resized" );
+    jQuery(".component").resizable({
+        resize: function (event, ui) {
+            ui.element.addClass("resized");
         },
-        start: function ( event, ui ) {
-            $( '<div class="ui-resizable-iframe-fix"></div>' )
+        start: function (event, ui) {
+            $('<div class="ui-resizable-iframe-fix"></div>')
                 .css({
                     width: "100vw", height: "100vh",
                     position: "absolute", zIndex: 1000
                 })
-                .css( $( this ).offset() )
-                .appendTo( "body" );
+                .css($(this).offset())
+                .appendTo("body");
         },
-        stop: function ( event, ui ) {
-            $( "div.ui-resizable-iframe-fix" ).remove();
+        stop: function (event, ui) {
+            $("div.ui-resizable-iframe-fix").remove();
         }
     });
 
-    jQuery( ".component .reset" ).click(function () {
-        var component = $( this ).closest( ".component" );
-        component.removeAttr( "style" ).removeClass( "resized" );
+    jQuery(".component .reset").click(function () {
+        var component = $(this).closest(".component");
+        component.removeAttr("style").removeClass("resized");
     });
 
-    jQuery( ".component-iframe" ).addClass( "loading" );
+    jQuery(".component-iframe").addClass("loading");
 
-    jQuery( "iframe" ).on( "load", function() {
-        jQuery( this ).closest( ".component-iframe" ).removeClass( "loading" );
+    jQuery("iframe").on("load", function () {
+        jQuery(this).closest(".component-iframe").removeClass("loading");
     });
 
-    jQuery( ".nav-pills a" ).on("click", function() {
-        var component = $( this ).closest( ".component" );
-        setTimeout( function() {
+    jQuery(".nav-pills a").on("click", function () {
+        var component = $(this).closest(".component");
+        setTimeout(function () {
             // trigger iframe resize here
-        }, 300 );
+        }, 300);
     });
 
-    iFrameResize()
+    iFrameResize();
+
+    jQuery.ajax({
+        url: "http://localhost:3333/status"
+    }).done(function (data) {
+        if (data === "OK") {
+            jQuery("#loadForm").removeClass("hidden");
+        }
+    });
+
+    jQuery("#loadForm button").click(function (e) {
+        e.preventDefault();
+        var path = jQuery("#loadForm input").val(),
+            action = "http://localhost:3333/?theme=" + encodeURIComponent(path);
+        jQuery.ajax({
+            url: action
+        }).done(function (data) {
+            location.reload();
+        });
+    });
 </script>
 </body>
 </html>

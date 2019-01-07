@@ -2,6 +2,8 @@
 
 namespace ThemeViz;
 
+header("Access-Control-Allow-Origin: *");
+
 define("THEMEVIZ_BASE_PATH", dirname(__FILE__));
 include_once(THEMEVIZ_BASE_PATH . "/vendor/autoload.php");
 
@@ -41,9 +43,13 @@ $app->get('/', function ($request, $response, $args) {
 		/** @var App $tvApp */
 		$tvApp = $factory->getApp();
 		$tvApp->buildStyleGuide();
-		$styleGuide = file_get_contents(THEMEVIZ_BASE_PATH."/build/styleGuide.html");
+		$buildUrl = "file://".THEMEVIZ_BASE_PATH."/build/styleGuide.html";
 
-		return $response->getBody()->write($styleGuide);
+		return $response->getBody()->write(
+			"Style guide compiled for theme:<br/>" .
+			THEMEVIZ_THEME_PATH .
+			"<br /><br /><a href='$buildUrl' target='_blank'>$buildUrl</a>"
+		);
 	}
 
 	return $response->getBody()->write(<<<DOC
@@ -54,12 +60,8 @@ DOC
 	);
 });
 
-$app->get('/html', function ($request, $response, array $args) {
-	if ($_GET["path"]) {
-		$html = file_get_contents($_GET["path"]);
-
-		return $response->getBody()->write($html);
-	}
+$app->get('/status', function ($request, $response, $args) {
+	return $response->getBody()->write("OK");
 });
 
 $app->run();
