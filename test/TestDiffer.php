@@ -9,7 +9,7 @@ final class TestDiffer extends ThemeViz\TestCase
     {
         parent::setUp();
 
-        $this->differ = $this->factory->getDiffer();
+        $this->differ = $this->factory->get("Differ");
     }
 
     public function testCreatesDiffsFolder()

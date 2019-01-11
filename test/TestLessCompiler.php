@@ -9,7 +9,7 @@ final class TestLessCompiler extends ThemeViz\TestCase
 	{
 		parent::setUp();
 
-		$this->lessCompiler = $this->factory->getLessCompiler();
+		$this->lessCompiler = $this->factory->get("LessCompiler");
 	}
 
 	/**

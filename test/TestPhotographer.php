@@ -9,7 +9,7 @@ final class TestPhotographer extends ThemeViz\TestCase
     {
         parent::setUp();
 
-        $this->photographer = $this->factory->getPhotographer();
+        $this->photographer = $this->factory->get("Photographer");
     }
 
     public function testPersistsPhotoPath()

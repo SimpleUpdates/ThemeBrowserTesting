@@ -9,7 +9,7 @@ final class TestApp extends ThemeViz\TestCase
     {
         parent::setUp();
 
-        $this->app = $this->factory->getApp();
+        $this->app = $this->factory->get("App");
     }
 
     public function testRetrievesConfigFile()

@@ -27,7 +27,12 @@ abstract class TwigFile extends File
 	protected $stylesheet;
 	protected $buildPath;
 
-	public function __construct(DataFactory $dataFactory, Filesystem $filesystem, Less $less, Twig $twig)
+	public function __construct(
+		DataFactory $dataFactory,
+		Filesystem $filesystem,
+		Less $less,
+		Twig $twig
+	)
 	{
 		$this->dataFactory = $dataFactory;
 		$this->filesystem = $filesystem;

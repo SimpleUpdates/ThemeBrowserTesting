@@ -9,7 +9,7 @@ final class TestTwigCompiler extends ThemeViz\TestCase
     {
         parent::setUp();
 
-        $this->twigCompiler = $this->factory->getTwigCompiler();
+        $this->twigCompiler = $this->factory->get("TwigCompiler");
     }
 
     public function testExists()

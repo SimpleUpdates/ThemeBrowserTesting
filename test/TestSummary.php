@@ -9,7 +9,7 @@ final class TestSummary extends ThemeViz\TestCase
 	{
 		parent::setUp();
 
-		$this->summary = $this->factory->getFile_TwigFile_Summary();
+		$this->summary = $this->factory->get("File\\TwigFile\\Summary");
 	}
 
 	public function testRendersSummary()

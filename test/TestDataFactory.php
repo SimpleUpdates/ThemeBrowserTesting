@@ -69,7 +69,7 @@ final class TestDataFactory extends ThemeViz\TestCase {
 	{
 		parent::setUp();
 
-		$this->dataFactory = $this->factory->getDataFactory();
+		$this->dataFactory = $this->factory->get("DataFactory");
 	}
 
 //	public function testLoadsCollectionData()

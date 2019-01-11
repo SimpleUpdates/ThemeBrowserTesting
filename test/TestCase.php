@@ -48,20 +48,13 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         define("THEMEVIZ_BASE_PATH", dirname(__DIR__));
         define("THEMEVIZ_THEME_PATH", $this->themePath);
 
-        $this->mockFilesystem = new StubFilesystem($this);
-        $this->mockFirefox = new StubFirefox($this);
-        $this->mockGit = new StubGit($this);
-        $this->mockLess = new StubLess($this);
-        $this->mockPixelmatch = new StubPixelmatch($this);
-        $this->mockTwig = new StubTwig($this);
-
         $this->factory = new Factory(
-            $this->mockFilesystem,
-            $this->mockFirefox,
-            $this->mockGit,
-            $this->mockLess,
-            $this->mockPixelmatch,
-            $this->mockTwig
+			$this->mockFilesystem = new StubFilesystem($this),
+			$this->mockFirefox = new StubFirefox($this),
+			$this->mockGit = new StubGit($this),
+			$this->mockLess = new StubLess($this),
+			$this->mockPixelmatch = new StubPixelmatch($this),
+			$this->mockTwig = new StubTwig($this)
         );
 
         $this->mockFilesystem->loadThemeConf([]);

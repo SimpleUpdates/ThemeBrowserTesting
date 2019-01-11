@@ -9,7 +9,7 @@ final class TestComponentFactory extends ThemeViz\TestCase
 	{
 		parent::setUp();
 
-		$this->componentRepository = $this->factory->getComponentFactory();
+		$this->componentRepository = $this->factory->get("ComponentFactory");
 	}
 
 	public function testExists()

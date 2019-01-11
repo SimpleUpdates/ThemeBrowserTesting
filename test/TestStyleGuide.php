@@ -9,7 +9,7 @@ final class TestStyleGuide extends ThemeViz\TestCase
 	{
 		parent::setUp();
 
-		$this->styleGuide = $this->factory->getFile_TwigFile_StyleGuide();
+		$this->styleGuide = $this->factory->get("File\\TwigFile\\StyleGuide");
 	}
 
 	public function testExists()
