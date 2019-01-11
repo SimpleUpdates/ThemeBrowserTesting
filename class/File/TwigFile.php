@@ -9,7 +9,7 @@ use ThemeViz\Filesystem;
 use ThemeViz\Less;
 use ThemeViz\Twig;
 
-abstract class Page extends File
+abstract class TwigFile extends File
 {
 	/** @var DataFactory $dataFactory */
 	protected $dataFactory;

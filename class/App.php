@@ -2,8 +2,8 @@
 
 namespace ThemeViz;
 
-use ThemeViz\File\Page\StyleGuide;
-use ThemeViz\File\Page\Summary;
+use ThemeViz\File\TwigFile\StyleGuide;
+use ThemeViz\File\TwigFile\Summary;
 
 class App
 {

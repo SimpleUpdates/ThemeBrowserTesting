@@ -1,11 +1,11 @@
 <?php
 
-namespace ThemeViz\File\Page;
+namespace ThemeViz\File\TwigFile;
 
 
-use ThemeViz\File\Page;
+use ThemeViz\File\TwigFile;
 
-class StyleGuide extends Page
+class StyleGuide extends TwigFile
 {
 	protected $template = "styleGuide.twig";
 	protected $stylesheet = "styleGuide.less";

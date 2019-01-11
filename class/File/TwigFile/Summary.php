@@ -1,11 +1,11 @@
 <?php
 
-namespace ThemeViz\File\Page;
+namespace ThemeViz\File\TwigFile;
 
 
-use ThemeViz\File\Page;
+use ThemeViz\File\TwigFile;
 
-class Summary extends Page
+class Summary extends TwigFile
 {
     protected $template = "summary.twig";
     protected $buildPath = "summary.html";
