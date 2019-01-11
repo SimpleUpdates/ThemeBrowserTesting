@@ -59,16 +59,16 @@ class App
     {
         $this->filesystem->deleteTree(THEMEVIZ_BASE_PATH . "/build");
         $this->buildHead();
-		$this->page_styleGuide->compile();
+		$this->page_styleGuide->save();
 		$this->buildProduction();
         $this->differ->buildDiffs();
-        $this->page_summary->compile();
+        $this->page_summary->save();
     }
 
 	public function buildStyleGuide()
 	{
 		$this->buildHead();
-		$this->page_styleGuide->compile();
+		$this->page_styleGuide->save();
 	}
 
 	public function buildHead()

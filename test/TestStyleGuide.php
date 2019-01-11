@@ -2,7 +2,7 @@
 
 final class TestStyleGuide extends ThemeViz\TestCase
 {
-	/** @var \ThemeViz\Page\StyleGuide $styleGuide */
+	/** @var \ThemeViz\File\TwigFile\StyleGuide $styleGuide */
 	private $styleGuide;
 
 	protected function setUp()
@@ -26,7 +26,7 @@ final class TestStyleGuide extends ThemeViz\TestCase
 	{
 		$this->mockFilesystem->setReturnValue("findPathsMatchingRecursive", ["/path/to/build/file"]);
 
-		$this->styleGuide->compile();
+		$this->styleGuide->save();
 
 		$data = [
 			"themeviz_components" => [
@@ -47,7 +47,7 @@ final class TestStyleGuide extends ThemeViz\TestCase
 
 	public function testGetsHtmlFiles()
 	{
-		$this->styleGuide->compile();
+		$this->styleGuide->save();
 
 		$this->mockFilesystem->assertMethodCalledWith(
 			"findPathsMatchingRecursive",
@@ -65,7 +65,7 @@ final class TestStyleGuide extends ThemeViz\TestCase
 			[$path]
 		);
 
-		$this->styleGuide->compile();
+		$this->styleGuide->save();
 
 		$data = [
 			"themeviz_components" => [
@@ -88,7 +88,7 @@ final class TestStyleGuide extends ThemeViz\TestCase
 	{
 		$this->mockLess->setReturnValue("getCss", "compiled_css");
 
-		$this->styleGuide->compile();
+		$this->styleGuide->save();
 
 		$data = [
 			"themeviz_components" => [],
@@ -104,7 +104,7 @@ final class TestStyleGuide extends ThemeViz\TestCase
 
 	public function testParsesLess()
 	{
-		$this->styleGuide->compile();
+		$this->styleGuide->save();
 
 		$basePath = THEMEVIZ_BASE_PATH . "/style";
 

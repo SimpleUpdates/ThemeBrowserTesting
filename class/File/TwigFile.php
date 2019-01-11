@@ -35,7 +35,11 @@ abstract class TwigFile extends File
 		$this->twig = $twig;
 	}
 
-	public function compile()
+	/**
+	 * @return string
+	 * @throws \Exception
+	 */
+	protected function makeContents()
 	{
 		$dataArray = $this->getDataArray();
 		$data = $this->dataFactory->makeData($dataArray);
@@ -52,12 +56,15 @@ abstract class TwigFile extends File
 			"themeviz_theme_path" => THEMEVIZ_THEME_PATH
 		], $dataArray);
 
-		$html = $this->twig->renderFile($this->template, $dataArray);
+		return $this->twig->renderFile($this->template, $dataArray);
+	}
 
-		$this->filesystem->fileForceContents(
-			THEMEVIZ_BASE_PATH . "/build/$this->buildPath",
-			$html
-		);
+	/**
+	 * @return string
+	 */
+	protected function getOutPath(): string
+	{
+		return "/build/$this->buildPath";
 	}
 
 	abstract protected function getDataArray();

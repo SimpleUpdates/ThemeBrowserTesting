@@ -14,14 +14,14 @@ final class TestSummary extends ThemeViz\TestCase
 
 	public function testRendersSummary()
 	{
-		$this->summary->compile();
+		$this->summary->save();
 
 		$this->mockTwig->assertMethodCalled("renderFile");
 	}
 
 	public function testScansDiffs()
 	{
-		$this->summary->compile();
+		$this->summary->save();
 
 		$this->mockFilesystem->assertMethodCalledWith(
 			"scanDir",
@@ -33,7 +33,7 @@ final class TestSummary extends ThemeViz\TestCase
 	{
 		$this->mockFilesystem->setReturnValue("scanDir", ["component.png"]);
 
-		$this->summary->compile();
+		$this->summary->save();
 
 		$data = [
 			"themeviz_components" => [
@@ -57,7 +57,7 @@ final class TestSummary extends ThemeViz\TestCase
 	{
 		$this->mockTwig->setReturnValue("renderFile", "rendered_twig");
 
-		$this->summary->compile();
+		$this->summary->save();
 
 		$this->mockFilesystem->assertMethodCalledWith(
 			"fileForceContents",
