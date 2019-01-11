@@ -14,7 +14,7 @@ abstract class File
 
 	public function save() {
 		$this->filesystem->fileForceContents(
-			THEMEVIZ_BASE_PATH . $this->getOutPath(),
+			THEMEVIZ_BASE_PATH . "/" . $this->getOutPath(),
 			$this->makeContents()
 		);
 	}

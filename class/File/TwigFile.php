@@ -69,7 +69,7 @@ abstract class TwigFile extends File
 	 */
 	protected function getOutPath(): string
 	{
-		return "/build/$this->buildPath";
+		return "build/$this->buildPath";
 	}
 
 	abstract protected function getDataArray();
