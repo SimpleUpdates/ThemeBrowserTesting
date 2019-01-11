@@ -2,6 +2,9 @@
 
 namespace ThemeViz;
 
+use ThemeViz\File\Page\StyleGuide;
+use ThemeViz\File\Page\Summary;
+
 class App
 {
     /** @var Differ $differ */
@@ -13,10 +16,10 @@ class App
     /** @var Git $git */
     private $git;
 
-    /** @var Page\StyleGuide $page_styleGuide */
+    /** @var StyleGuide $page_styleGuide */
     private $page_styleGuide;
 
-	/** @var Page\Summary $page_summary */
+	/** @var Summary $page_summary */
 	private $page_summary;
 
     /** @var Photographer $photographer */
@@ -32,8 +35,8 @@ class App
 		Differ $differ,
 		Filesystem $filesystem,
 		Git $git,
-		Page\StyleGuide $page_styleGuide,
-		Page\Summary $page_summary,
+		StyleGuide $page_styleGuide,
+		Summary $page_summary,
 		Photographer $photographer,
 		TwigStore $scenarioStorage,
 		TwigCompiler $twigCompiler

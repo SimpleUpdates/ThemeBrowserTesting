@@ -1,9 +1,15 @@
 <?php
 
-namespace ThemeViz;
+namespace ThemeViz\File;
 
 
-abstract class Page
+use ThemeViz\DataFactory;
+use ThemeViz\File;
+use ThemeViz\Filesystem;
+use ThemeViz\Less;
+use ThemeViz\Twig;
+
+abstract class Page extends File
 {
 	/** @var DataFactory $dataFactory */
 	protected $dataFactory;

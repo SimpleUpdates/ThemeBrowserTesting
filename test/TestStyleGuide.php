@@ -9,17 +9,17 @@ final class TestStyleGuide extends ThemeViz\TestCase
 	{
 		parent::setUp();
 
-		$this->styleGuide = $this->factory->getPage_StyleGuide();
+		$this->styleGuide = $this->factory->getFile_Page_StyleGuide();
 	}
 
 	public function testExists()
 	{
-		$this->assertInstanceOf("\\ThemeViz\\Page\\StyleGuide", $this->styleGuide);
+		$this->assertInstanceOf("\\ThemeViz\\File\\Page\\StyleGuide", $this->styleGuide);
 	}
 
 	public function testExtendsPage()
 	{
-		$this->assertInstanceOf("\\ThemeViz\\Page", $this->styleGuide);
+		$this->assertInstanceOf("\\ThemeViz\\File\\Page", $this->styleGuide);
 	}
 
 	public function testPassesComponentsToTemplate()

@@ -2,14 +2,14 @@
 
 final class TestSummary extends ThemeViz\TestCase
 {
-	/** @var \ThemeViz\Page\Summary $summary */
+	/** @var \ThemeViz\File\Page\Summary $summary */
 	private $summary;
 
 	protected function setUp()
 	{
 		parent::setUp();
 
-		$this->summary = $this->factory->getPage_Summary();
+		$this->summary = $this->factory->getFile_Page_Summary();
 	}
 
 	public function testRendersSummary()

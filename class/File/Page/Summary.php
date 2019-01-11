@@ -1,9 +1,9 @@
 <?php
 
-namespace ThemeViz\Page;
+namespace ThemeViz\File\Page;
 
 
-use ThemeViz\Page;
+use ThemeViz\File\Page;
 
 class Summary extends Page
 {
