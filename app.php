@@ -16,6 +16,8 @@ if (!THEMEVIZ_THEME_PATH) {
 }
 
 $factory = new Factory();
-$app = $factory->getApp();
+
+/** @var App $app */
+$app = $factory->get("App");
 
 $app->compile();
