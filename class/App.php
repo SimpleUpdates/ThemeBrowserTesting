@@ -25,25 +25,13 @@ class App
 	/** @var Summary $page_summary */
 	private $page_summary;
 
-    /** @var Photographer $photographer */
-    private $photographer;
-
-    /** @var TwigStore $scenarioStorage */
-    private $scenarioStorage;
-
-    /** @var TwigCompiler $twigCompiler */
-    private $twigCompiler;
-
     public function __construct(
     	BuildFactory $buildFactory,
 		Differ $differ,
 		Filesystem $filesystem,
 		Git $git,
 		StyleGuide $page_styleGuide,
-		Summary $page_summary,
-		Photographer $photographer,
-		TwigStore $scenarioStorage,
-		TwigCompiler $twigCompiler
+		Summary $page_summary
     )
     {
     	$this->buildFactory = $buildFactory;
@@ -52,9 +40,6 @@ class App
         $this->git = $git;
 		$this->page_styleGuide = $page_styleGuide;
 		$this->page_summary = $page_summary;
-        $this->photographer = $photographer;
-        $this->scenarioStorage = $scenarioStorage;
-        $this->twigCompiler = $twigCompiler;
     }
 
     /**
