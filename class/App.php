@@ -7,6 +7,9 @@ use ThemeViz\File\TwigFile\Summary;
 
 class App
 {
+	/** @var BuildFactory $buildFactory */
+	private $buildFactory;
+
     /** @var Differ $differ */
     private $differ;
 
@@ -32,6 +35,7 @@ class App
     private $twigCompiler;
 
     public function __construct(
+    	BuildFactory $buildFactory,
 		Differ $differ,
 		Filesystem $filesystem,
 		Git $git,
@@ -42,6 +46,7 @@ class App
 		TwigCompiler $twigCompiler
     )
     {
+    	$this->buildFactory = $buildFactory;
         $this->differ = $differ;
         $this->filesystem = $filesystem;
         $this->git = $git;
@@ -58,7 +63,7 @@ class App
     public function compile()
     {
         $this->filesystem->deleteTree(THEMEVIZ_BASE_PATH . "/build");
-        $this->buildHead();
+		$this->runBuild("head");
 		$this->page_styleGuide->save();
 		$this->buildProduction();
         $this->differ->buildDiffs();
@@ -67,13 +72,8 @@ class App
 
 	public function buildStyleGuide()
 	{
-		$this->buildHead();
+		$this->runBuild("head");
 		$this->page_styleGuide->save();
-	}
-
-	public function buildHead()
-	{
-		$this->makeBuild("head");
 	}
 
 	public function buildProduction()
@@ -81,32 +81,16 @@ class App
 		$this->git->saveState(THEMEVIZ_THEME_PATH);
 		$this->git->checkoutRemoteBranch(THEMEVIZ_THEME_PATH, "production");
 		$this->git->pull(THEMEVIZ_THEME_PATH, "production");
-
-		$this->makeBuild("production");
-
+		$this->runBuild("production");
 		$this->git->resetState(THEMEVIZ_THEME_PATH);
 	}
 
 	/**
 	 * @param $buildName
-	 * @throws \Less_Exception_Parser
 	 */
-    private function makeBuild($buildName): void
+    private function runBuild($buildName): void
     {
-		$buildPath = THEMEVIZ_BASE_PATH . "/build/$buildName";
-
-		$this->filesystem->deleteTree($buildPath);
-
-        if (!$components = $this->twigCompiler->compileTwig()) return;
-
-		$this->scenarioStorage->persistTwigComponents(
-			$components,
-			"$buildPath/html"
-		);
-
-        $this->photographer->photographComponents(
-        	"$buildPath/html",
-			"$buildPath/shots"
-		);
+		$build = $this->buildFactory->makeBuild($buildName);
+		$build->run();
     }
 }

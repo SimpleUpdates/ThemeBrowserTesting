@@ -349,7 +349,7 @@ final class TestApp extends ThemeViz\TestCase
 	{
 		$this->loadMinimalComponentsFile();
 
-		$this->app->buildHead();
+		$this->app->buildStyleGuide();
 
 		$this->mockFilesystem->assertMethodCalledWith(
 			"deleteTree",
