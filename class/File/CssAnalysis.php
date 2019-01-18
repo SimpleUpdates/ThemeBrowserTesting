@@ -35,7 +35,7 @@ class CssAnalysis extends File
 	{
 		$text = $this->doiuse->run(THEMEVIZ_BASE_PATH . "/build/$this->buildName/theme.css");
 
-		return nl2br($text);
+		return implode("<br>", $text ?? []);
 	}
 
 	protected function getOutPath()
