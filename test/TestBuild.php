@@ -63,15 +63,15 @@ final class TestBuild extends ThemeViz\TestCase
 
 	public function testPersistsCssAnalysis()
 	{
-		$this->mockDoiuse->setReturnValue("run", "css_analysis");
+		$this->mockDoiuse->setReturnValue("run", "css_analysis\nline 2");
 
 		$this->build->setName("head");
 		$this->build->run();
 
 		$this->mockFilesystem->assertMethodCalledWith(
 			"fileForceContents",
-			THEMEVIZ_BASE_PATH . "/build/head/cssAnalysis.txt",
-			"css_analysis"
+			THEMEVIZ_BASE_PATH . "/build/head/cssAnalysis.html",
+			"css_analysis<br />\nline 2"
 		);
 	}
 }

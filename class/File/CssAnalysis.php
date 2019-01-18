@@ -23,7 +23,7 @@ class CssAnalysis extends File
 
 	/**
 	 * @param mixed $buildName
-	 * @return StyleSheet
+	 * @return CssAnalysis
 	 */
 	public function setBuildName($buildName)
 	{
@@ -33,11 +33,13 @@ class CssAnalysis extends File
 
 	protected function makeContents()
 	{
-		return $this->doiuse->run(THEMEVIZ_BASE_PATH . "/build/$this->buildName/theme.css");
+		$text = $this->doiuse->run(THEMEVIZ_BASE_PATH . "/build/$this->buildName/theme.css");
+
+		return nl2br($text);
 	}
 
 	protected function getOutPath()
 	{
-		return "build/$this->buildName/cssAnalysis.txt";
+		return "build/$this->buildName/cssAnalysis.html";
 	}
 }
