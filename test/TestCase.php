@@ -4,6 +4,9 @@ namespace ThemeViz;
 
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
+	/** @var StubDoiuse $mockDoiuse */
+	protected $mockDoiuse;
+
     /** @var StubFilesystem|Filesystem */
     protected $mockFilesystem;
 
@@ -49,6 +52,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         define("THEMEVIZ_THEME_PATH", $this->themePath);
 
         $this->factory = new Factory(
+        	$this->mockDoiuse = new StubDoiuse($this),
 			$this->mockFilesystem = new StubFilesystem($this),
 			$this->mockFirefox = new StubFirefox($this),
 			$this->mockGit = new StubGit($this),

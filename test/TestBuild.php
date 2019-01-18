@@ -50,4 +50,28 @@ final class TestBuild extends ThemeViz\TestCase
 			"compiled_css"
 		);
 	}
+
+	public function testAnalyzesCss() {
+		$this->build->setName("head");
+		$this->build->run();
+
+		$this->mockDoiuse->assertMethodCalledWith(
+			"run",
+			THEMEVIZ_BASE_PATH . "/build/head/theme.css"
+		);
+	}
+
+	public function testPersistsCssAnalysis()
+	{
+		$this->mockDoiuse->setReturnValue("run", "css_analysis");
+
+		$this->build->setName("head");
+		$this->build->run();
+
+		$this->mockFilesystem->assertMethodCalledWith(
+			"fileForceContents",
+			THEMEVIZ_BASE_PATH . "/build/head/cssAnalysis.txt",
+			"css_analysis"
+		);
+	}
 }

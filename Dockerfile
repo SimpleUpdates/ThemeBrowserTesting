@@ -40,9 +40,11 @@ RUN chmod +x ./install_npm.sh && ./install_npm.sh
 RUN apt-get -qqy --no-install-recommends install nodejs
 
 # coffeescript - required for circle-github-bot compilation
+# doiuse - identifies unsupported CSS properties
 # pixelmatch - used to generate visual diffs
 RUN npm install -g \
     coffeescript \
+    doiuse \
     pixelmatch
 
 RUN git config --global user.email "nathan@simpleupdates.com"

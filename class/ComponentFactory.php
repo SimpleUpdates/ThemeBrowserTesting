@@ -2,19 +2,22 @@
 
 namespace ThemeViz;
 
+use ThemeViz\File\ConfigFile\ComponentsFile;
+
 class ComponentFactory
 {
+	/** @var ComponentsFile $componentsFile */
+	private $componentsFile;
+
 	/** @var Factory $factory */
 	private $factory;
 
 	/** @var Filesystem $filesystem */
 	private $filesystem;
 
-	private $themeConfig;
-	private $componentsFile;
-
-	public function __construct(Factory $factory, Filesystem $filesystem)
+	public function __construct(ComponentsFile $componentsFile, Factory $factory, Filesystem $filesystem)
 	{
+		$this->componentsFile = $componentsFile;
 		$this->factory = $factory;
 		$this->filesystem = $filesystem;
 	}
@@ -26,10 +29,7 @@ class ComponentFactory
 	 */
 	public function getComponents()
 	{
-		$this->themeConfig = $this->getThemeConfig();
-		$this->componentsFile = $this->getComponentsFile();
-
-		$screens = $this->componentsFile["screens"] ?? [];
+		$screens = $this->componentsFile->getContents()["screens"] ?? [];
 
 		return array_map(function($screen) {
 			/** @var Component $component */
@@ -40,50 +40,5 @@ class ComponentFactory
 
 			return $component;
 		}, $screens);
-	}
-
-	/**
-	 * @return array
-	 * @throws \Exception
-	 */
-	private function getComponentsFile(): array
-	{
-		return $this->getCachedDecodedJsonFile(
-			"componentsFile",
-			THEMEVIZ_THEME_PATH . "/components.json"
-		);
-	}
-
-	/**
-	 * @return array
-	 * @throws \Exception
-	 */
-	private function getThemeConfig(): array
-	{
-		return $this->getCachedDecodedJsonFile(
-			"themeConfig",
-			THEMEVIZ_THEME_PATH . "/theme.conf"
-		);
-	}
-
-	/**
-	 * @param $fieldName
-	 * @param $path
-	 * @return mixed
-	 * @throws \Exception
-	 */
-	private function getCachedDecodedJsonFile($fieldName, $path)
-	{
-		if (!$this->$fieldName) {
-			$json = $this->filesystem->getFile($path);
-
-			$this->$fieldName = json_decode($json, TRUE);
-
-			if ($json && $this->$fieldName === NULL) {
-				throw new \Exception("Error attempting to decode json file: $path");
-			}
-		}
-
-		return $this->$fieldName;
 	}
 }
