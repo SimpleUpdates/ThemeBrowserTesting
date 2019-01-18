@@ -47,7 +47,7 @@ abstract class TwigFile extends File
 	protected function makeContents()
 	{
 		$dataArray = $this->getDataArray();
-		$data = $this->dataFactory->makeData($dataArray);
+//		$data = $this->dataFactory->makeData($dataArray);
 
 		if ($this->stylesheet) {
 			$styleFolder = THEMEVIZ_BASE_PATH . "/style";
@@ -57,10 +57,6 @@ abstract class TwigFile extends File
 			$dataArray["themeviz_css"] = $css;
 		}
 
-		array_merge([
-			"themeviz_theme_path" => THEMEVIZ_THEME_PATH
-		], $dataArray);
-
 		return $this->twig->renderFile($this->template, $dataArray);
 	}
 
@@ -69,8 +65,9 @@ abstract class TwigFile extends File
 	 */
 	protected function getOutPath(): string
 	{
-		return "build/$this->buildPath";
+		return "build/" . $this->getBuildPath();
 	}
 
 	abstract protected function getDataArray();
+	abstract protected function getBuildPath();
 }

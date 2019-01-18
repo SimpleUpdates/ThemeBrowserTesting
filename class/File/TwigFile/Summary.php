@@ -8,7 +8,6 @@ use ThemeViz\File\TwigFile;
 class Summary extends TwigFile
 {
     protected $template = "summary.twig";
-    protected $buildPath = "summary.html";
 
     protected function getDataArray()
     {
@@ -25,4 +24,9 @@ class Summary extends TwigFile
 
 		return ["themeviz_components" => $components];
     }
+
+	protected function getBuildPath()
+	{
+		return "summary.html";
+	}
 }

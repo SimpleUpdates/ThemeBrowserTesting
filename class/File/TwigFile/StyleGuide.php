@@ -30,4 +30,9 @@ class StyleGuide extends TwigFile
 			"themeviz_components" => $components
 		];
 	}
+
+	protected function getBuildPath()
+	{
+		// TODO: Implement getBuildPath() method.
+	}
 }

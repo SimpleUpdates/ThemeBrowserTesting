@@ -29,4 +29,25 @@ final class TestBuild extends ThemeViz\TestCase
 			THEMEVIZ_BASE_PATH . "/build/head"
 		);
 	}
+
+	public function testCompilesCss()
+	{
+		$this->build->run();
+
+		$this->mockLess->assertMethodCalled("getCss");
+	}
+
+	public function testSetsStyleSheetOutPath()
+	{
+		$this->mockLess->setReturnValue("getCss", "compiled_css");
+
+		$this->build->setName("head");
+		$this->build->run();
+
+		$this->mockFilesystem->assertMethodCalledWith(
+			"fileForceContents",
+			THEMEVIZ_BASE_PATH . "/build/head/theme.css",
+			"compiled_css"
+		);
+	}
 }

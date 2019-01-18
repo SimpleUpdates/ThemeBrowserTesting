@@ -2,32 +2,34 @@
 
 namespace ThemeViz;
 
+use ThemeViz\File\StyleSheet;
+
 class Build {
+	/** @var ComponentFactory $componentFactory */
+	private $componentFactory;
+
 	/** @var Filesystem $filesystem */
 	private $filesystem;
 
 	/** @var Photographer $photographer */
 	private $photographer;
 
-	/** @var TwigStore $scenarioStorage */
-	private $scenarioStorage;
-
-	/** @var TwigCompiler $twigCompiler */
-	private $twigCompiler;
+	/** @var StyleSheet $styleSheet */
+	private $styleSheet;
 
 	private $name;
 
 	public function __construct(
+		ComponentFactory $componentFactory,
 		Filesystem $filesystem,
 		Photographer $photographer,
-		TwigStore $scenarioStorage,
-		TwigCompiler $twigCompiler
+		StyleSheet $styleSheet
 	)
 	{
+		$this->componentFactory = $componentFactory;
 		$this->filesystem = $filesystem;
 		$this->photographer = $photographer;
-		$this->scenarioStorage = $scenarioStorage;
-		$this->twigCompiler = $twigCompiler;
+		$this->styleSheet = $styleSheet;
 	}
 
 	public function setName(string $name)
@@ -41,12 +43,14 @@ class Build {
 
 		$this->filesystem->deleteTree($buildPath);
 
-		if (!$components = $this->twigCompiler->compileTwig()) return;
+		$this->styleSheet->setOutPath("build/$this->name/theme.css");
+		$this->styleSheet->save();
 
-		$this->scenarioStorage->persistTwigComponents(
-			$components,
-			"$buildPath/html"
-		);
+		$components = $this->componentFactory->getComponents();
+
+		array_walk($components, function(Component $component) {
+			$component->compileScenarios($this->name);
+		});
 
 		$this->photographer->photographComponents(
 			"$buildPath/html",

@@ -19,11 +19,11 @@ class App
     /** @var Git $git */
     private $git;
 
-    /** @var StyleGuide $page_styleGuide */
-    private $page_styleGuide;
+    /** @var StyleGuide $styleGuide */
+    private $styleGuide;
 
-	/** @var Summary $page_summary */
-	private $page_summary;
+	/** @var Summary $summary */
+	private $summary;
 
     public function __construct(
     	BuildFactory $buildFactory,
@@ -38,8 +38,8 @@ class App
         $this->differ = $differ;
         $this->filesystem = $filesystem;
         $this->git = $git;
-		$this->page_styleGuide = $page_styleGuide;
-		$this->page_summary = $page_summary;
+		$this->styleGuide = $page_styleGuide;
+		$this->summary = $page_summary;
     }
 
     /**
@@ -49,16 +49,16 @@ class App
     {
         $this->filesystem->deleteTree(THEMEVIZ_BASE_PATH . "/build");
 		$this->runBuild("head");
-		$this->page_styleGuide->save();
+		$this->styleGuide->save();
 		$this->buildProduction();
         $this->differ->buildDiffs();
-        $this->page_summary->save();
+        $this->summary->save();
     }
 
 	public function buildStyleGuide()
 	{
 		$this->runBuild("head");
-		$this->page_styleGuide->save();
+		$this->styleGuide->save();
 	}
 
 	public function buildProduction()
@@ -75,7 +75,6 @@ class App
 	 */
     private function runBuild($buildName): void
     {
-		$build = $this->buildFactory->makeBuild($buildName);
-		$build->run();
+		$this->buildFactory->makeBuild($buildName)->run();
     }
 }

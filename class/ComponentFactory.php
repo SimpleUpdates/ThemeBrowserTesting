@@ -2,24 +2,21 @@
 
 namespace ThemeViz;
 
-
 class ComponentFactory
 {
+	/** @var Factory $factory */
+	private $factory;
+
 	/** @var Filesystem $filesystem */
 	private $filesystem;
-
-	/** @var LessCompiler $lessCompiler */
-	private $lessCompiler;
-
-	private $css;
 
 	private $themeConfig;
 	private $componentsFile;
 
-	public function __construct(Filesystem $filesystem, LessCompiler $lessCompiler)
+	public function __construct(Factory $factory, Filesystem $filesystem)
 	{
+		$this->factory = $factory;
 		$this->filesystem = $filesystem;
-		$this->lessCompiler = $lessCompiler;
 	}
 
 	/**
@@ -32,18 +29,16 @@ class ComponentFactory
 		$this->themeConfig = $this->getThemeConfig();
 		$this->componentsFile = $this->getComponentsFile();
 
-		$this->css = $this->css ?? $this->lessCompiler->getCss($this->themeConfig, $this->componentsFile);
-
 		$screens = $this->componentsFile["screens"] ?? [];
 
 		return array_map(function($screen) {
-			return new Component(
-				$this->componentsFile,
-				$this->css,
-				$screen["path"],
-				$screen["scenarios"],
-				$this->themeConfig
-			);
+			/** @var Component $component */
+			$component = $this->factory->make("Component");
+
+			$component->setSourcePath($screen["path"]);
+			$component->setScenarios($screen["scenarios"]);
+
+			return $component;
 		}, $screens);
 	}
 

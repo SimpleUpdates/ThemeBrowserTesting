@@ -41,7 +41,7 @@ $app->get('/', function ($request, $response, $args) {
 		define("THEMEVIZ_THEME_PATH", realpath($_GET["theme"]));
 		$factory = new Factory();
 		/** @var App $tvApp */
-		$tvApp = $factory->getApp();
+		$tvApp = $factory->get("App");
 		$tvApp->buildStyleGuide();
 		$buildUrl = "file://".THEMEVIZ_BASE_PATH."/build/styleGuide.html";
 

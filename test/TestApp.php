@@ -98,11 +98,11 @@ final class TestApp extends ThemeViz\TestCase
 
         $this->app->compile();
 
-        $this->assertTrue($this->mockFilesystem->wasMethodCalledWith(
-            "fileForceContents",
-            THEMEVIZ_BASE_PATH . "/build/head/html/path/to/file--ScenarioName.twig",
-            "rendered_layout"
-        ));
+        $this->mockFilesystem->assertMethodCalledWith(
+			"fileForceContents",
+			THEMEVIZ_BASE_PATH . "/build/head/html/path/to/file--ScenarioName.twig",
+			"rendered_layout"
+		);
     }
 
     public function testDeletesBuildFolder()
