@@ -114,4 +114,17 @@ final class TestStyleGuide extends ThemeViz\TestCase
 			$basePath
 		);
 	}
+
+	public function testOutputsFile()
+	{
+		$expected = THEMEVIZ_BASE_PATH . "/build/styleGuide.html";
+
+		$this->styleGuide->save();
+
+		$this->mockFilesystem->assertAnyCallMatches("fileForceContents", function($carry, $call) use($expected) {
+			$callPath = $call[0];
+
+			return $carry || $callPath === $expected;
+		});
+	}
 }

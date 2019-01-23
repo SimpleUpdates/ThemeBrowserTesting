@@ -9,7 +9,6 @@ class StyleGuide extends TwigFile
 {
 	protected $template = "styleGuide.twig";
 	protected $stylesheet = "styleGuide.less";
- 	protected $buildPath = "styleGuide.html";
 
 	protected function getDataArray() {
 		$paths = $this->filesystem->findPathsMatchingRecursive(
@@ -33,6 +32,6 @@ class StyleGuide extends TwigFile
 
 	protected function getBuildPath()
 	{
-		// TODO: Implement getBuildPath() method.
+		return "styleGuide.html";
 	}
 }
