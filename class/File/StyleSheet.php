@@ -44,10 +44,9 @@ class StyleSheet extends File
 
 	protected function makeContents()
 	{
-		$themeConfig = $this->themeConf->getContents();
 		$componentsFile = $this->componentsFile->getContents();
 
-		return $this->getCss($themeConfig, $componentsFile);
+		return $this->getCss($componentsFile);
 	}
 
 	protected function getOutPath()
@@ -56,18 +55,17 @@ class StyleSheet extends File
 	}
 
 	/**
-	 * @param $themeConfig
 	 * @param $componentsFile
 	 * @return string
 	 * @throws \Exception
 	 */
-	private function getCss($themeConfig, $componentsFile)
+	private function getCss($componentsFile)
 	{
 		$this->less->resetParser();
 
 		$this->parseBaseLess();
 		$this->less->parse("@su-assetpath: \"".THEMEVIZ_THEME_PATH."/asset\";");
-		$this->parseThemeConfigProperties($themeConfig);
+		$this->less->parse($this->themeConf->getLess());
 		$this->parseLessDefaults($componentsFile);
 		$this->parseThemeGlobalLess();
 
@@ -98,56 +96,5 @@ class StyleSheet extends File
 	private function parseThemeGlobalLess(): void
 	{
 		$this->less->parseFile(THEMEVIZ_THEME_PATH . "/style/global.less", THEMEVIZ_THEME_PATH);
-	}
-
-	private function parseThemeConfigProperties($themeConfig): void
-	{
-		$properties = $themeConfig["config"] ?? [];
-		$keys = array_keys($properties);
-
-		$themeConfigLess = array_reduce($keys, function ($carry, $key) use ($properties) {
-			$property = $properties[$key];
-			$formattedValue = $this->formatValue($property);
-
-			return "$carry @config-$key: $formattedValue;";
-		}, "");
-
-		$this->less->parse($themeConfigLess);
-	}
-
-	private function formatValue($property)
-	{
-		$rawValue = $property['value'];
-
-		if ($this->isImageProperty($property)) {
-			return  $this->formatImageLessValue($rawValue);
-		}
-
-		if ($property["type"] === "text") {
-			return '"'.$rawValue.'"';
-		}
-
-		return $rawValue;
-	}
-
-	/**
-	 * @param $value
-	 * @return string
-	 */
-	private function formatImageLessValue($value): string
-	{
-		$vendorSubstitutedPathFragment = str_replace("{{ su.misc.privatelabel }}", "su", $value);
-		$fullPath = THEMEVIZ_THEME_PATH . "/asset/$vendorSubstitutedPathFragment";
-
-		return "'$fullPath'";
-	}
-
-	/**
-	 * @param $property
-	 * @return bool
-	 */
-	private function isImageProperty($property): bool
-	{
-		return $property["type"] === "image";
 	}
 }

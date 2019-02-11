@@ -23,16 +23,13 @@ final class TestStyleSheet extends ThemeViz\TestCase
 
 		$this->styleSheet->save();
 
-		$this->mockFilesystem->assertAnyCallMatches("fileForceContents", function($carry, $call) {
+		$this->mockFilesystem->assertAnyCallMatches("fileForceContents", function ($carry, $call) {
 			$outPath = $call[0];
 
 			return $carry || $outPath === THEMEVIZ_BASE_PATH . "/provided/out/path";
 		});
 	}
 
-	/**
-	 * @throws Less_Exception_Parser
-	 */
 	public function testDoesNotCacheCss()
 	{
 		$this->mockLess->setReturnValue("getCss", "compiled_css");
@@ -43,9 +40,6 @@ final class TestStyleSheet extends ThemeViz\TestCase
 		$this->mockLess->assertCallCount("getCss", 2);
 	}
 
-	/**
-	 * @throws Less_Exception_Parser
-	 */
 	public function testResetsParser()
 	{
 		$this->styleSheet->save();
@@ -82,7 +76,51 @@ final class TestStyleSheet extends ThemeViz\TestCase
 
 		$this->mockLess->assertCallsContain(
 			"parse",
-			"@su-assetpath: \"".THEMEVIZ_THEME_PATH."/asset\";"
+			"@su-assetpath: \"" . THEMEVIZ_THEME_PATH . "/asset\";"
+		);
+	}
+
+	public function testIncludeFocalPointX()
+	{
+		$this->mockFilesystem->loadComponentsFileFromFilesystem("testComponentsFile1.json");
+		$this->mockFilesystem->loadThemeConf([
+			"config" => [
+				"headlineHomeBgImage" => [
+					"title" => "Default Home - home page alternative to Carousel using the featured image option",
+					"type" => "image",
+					"value" => "{{ su.misc.privatelabel }}/hero_image.jpg",
+					"image_min_size" => "1500 x 425"
+				]
+			]
+		]);
+
+		$this->styleSheet->save();
+
+		$this->mockLess->assertCallsContain(
+			"parse",
+			"@config-headlineHomeBgImage-focalpoint-x: 50;"
+		);
+	}
+
+	public function testIncludeFocalPointY()
+	{
+		$this->mockFilesystem->loadComponentsFileFromFilesystem("testComponentsFile1.json");
+		$this->mockFilesystem->loadThemeConf([
+			"config" => [
+				"headlineHomeBgImage" => [
+					"title" => "Default Home - home page alternative to Carousel using the featured image option",
+					"type" => "image",
+					"value" => "{{ su.misc.privatelabel }}/hero_image.jpg",
+					"image_min_size" => "1500 x 425"
+				]
+			]
+		]);
+
+		$this->styleSheet->save();
+
+		$this->mockLess->assertCallsContain(
+			"parse",
+			"@config-headlineHomeBgImage-focalpoint-y: 50;"
 		);
 	}
 }
