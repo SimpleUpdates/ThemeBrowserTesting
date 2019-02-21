@@ -22,68 +22,6 @@ final class TestStyleGuide extends ThemeViz\TestCase
 		$this->assertInstanceOf("\\ThemeViz\\File\\TwigFile", $this->styleGuide);
 	}
 
-	public function testPassesComponentsToTemplate()
-	{
-		$this->mockFilesystem->setReturnValue("findPathsMatchingRecursive", ["/path/to/build/file"]);
-
-		$this->styleGuide->save();
-
-		$data = [
-			"themeviz_components" => [
-				[
-					"name" => "file",
-					"html" => "file"
-				]
-			],
-			"themeviz_css" => null
-		];
-
-		$this->mockTwig->assertMethodCalledWith(
-			"renderFile",
-			"styleGuide.twig",
-			$data
-		);
-	}
-
-	public function testGetsHtmlFiles()
-	{
-		$this->styleGuide->save();
-
-		$this->mockFilesystem->assertMethodCalledWith(
-			"findPathsMatchingRecursive",
-			THEMEVIZ_BASE_PATH . "/build/head/html",
-			"/\.html$/"
-		);
-	}
-
-	public function testSimplifiesComponentNameAndPath()
-	{
-		$path = "/Users/work/ProgrammingProjects/ThemeViz/build/head/html/partial/atom-sitename--Configured.html";
-
-		$this->mockFilesystem->setReturnValue(
-			"findPathsMatchingRecursive",
-			[$path]
-		);
-
-		$this->styleGuide->save();
-
-		$data = [
-			"themeviz_components" => [
-				[
-					"name" => "atom-sitename--Configured.html",
-					"html" => "head/html/partial/atom-sitename--Configured.html"
-				]
-			],
-			"themeviz_css" => null
-		];
-
-		$this->mockTwig->assertMethodCalledWith(
-			"renderFile",
-			"styleGuide.twig",
-			$data
-		);
-	}
-
 	public function testRendersCss()
 	{
 		$this->mockLess->setReturnValue("getCss", "compiled_css");
@@ -121,10 +59,23 @@ final class TestStyleGuide extends ThemeViz\TestCase
 
 		$this->styleGuide->save();
 
-		$this->mockFilesystem->assertAnyCallMatches("fileForceContents", function($carry, $call) use($expected) {
+		$this->mockFilesystem->assertAnyCallMatches("fileForceContents", function ($carry, $call) use ($expected) {
 			$callPath = $call[0];
 
 			return $carry || $callPath === $expected;
 		});
+	}
+
+	public function testPassesComponentObjects()
+	{
+		$this->mockFilesystem->loadMinimalComponentsFile();
+
+		$this->styleGuide->save();
+
+		$this->mockTwig->assertTwigTemplateRenderedWithDataMatching(
+			"styleGuide.twig", null, function ($callData) {
+				return $callData["themeviz_components"][0] instanceof \ThemeViz\Component;
+			}
+		);
 	}
 }

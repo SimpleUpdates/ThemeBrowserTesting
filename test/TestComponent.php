@@ -2,7 +2,7 @@
 
 final class TestComponent extends ThemeViz\TestCase
 {
-	/** @var \ThemeViz\File\TwigFile\Component $component */
+	/** @var \ThemeViz\Component $component */
 	private $component;
 
 	/**
@@ -18,5 +18,22 @@ final class TestComponent extends ThemeViz\TestCase
 	public function testExists()
 	{
 		$this->assertInstanceOf("\\ThemeViz\\Component", $this->component);
+	}
+
+	public function testGetScenarios()
+	{
+		$this->component->setScenarios([[]]);
+		$scenarios = $this->component->getScenarios();
+
+		$this->assertInstanceOf("\\ThemeViz\\File\\TwigFile\\Scenario", $scenarios[0]);
+	}
+
+	public function testGetName()
+	{
+		$this->component->setSourcePath("path/to/component");
+
+		$name = $this->component->getName();
+
+		$this->assertEquals("path/to/component", $name);
 	}
 }

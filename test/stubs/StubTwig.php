@@ -6,7 +6,7 @@ class StubTwig extends Twig
 {
     use Stub;
 
-    public function renderFile($templateFile, $data = [])
+    public function renderFile($templateFile, $data = [], $state = "head")
     {
         return $this->handleCall(__FUNCTION__, func_get_args());
     }
@@ -16,26 +16,28 @@ class StubTwig extends Twig
         return $this->handleCall(__FUNCTION__, func_get_args());
     }
 
-	public function assertTwigTemplateRendered($template)
+	public function assertTwigTemplateRendered($template, $data = [], $state = null)
 	{
-		$message = "Failed to assert that $template was rendered";
-		$this->assertAnyCallMatches("renderFile", function($carry, $call) use($template) {
-			$callTemplate = $call[0];
-			return $carry || ($callTemplate === $template);
-		}, $message);
+		$this->assertTwigTemplateRenderedWithDataMatching($template, $state, [$this, "doesDataIncludeData"], $data);
 	}
 
-	public function assertTwigTemplateRenderedWithData($template, $data)
+	public function assertTwigTemplateRenderedWithDataMatching($template, $state, $callable, ...$params)
 	{
-		$message = "Failed to assert that $template was rendered with data";
-		$this->assertAnyCallMatches("renderFile", function($carry, $call) use($template, $data) {
+		$this->assertAnyCallMatches("renderFile", function($carry, $call) use($template, $state, $callable, $params) {
 			$callTemplate = $call[0];
 			$callData = $call[1];
+			$callState = $call[2];
 
-			$withTemplate = $callTemplate === $template;
-			$withData = empty( array_diff( $data, $callData ) );
+			$doesTemplateMatch = $callTemplate === $template;
+			$doesStateMatch = $state ? $callState === $state : true;
+			$doesCallableMatch = call_user_func($callable, $callData, ...$params);
 
-			return $carry || ( $withTemplate && $withData ) ;
-		}, $message);
+			return $carry || ($doesTemplateMatch && $doesStateMatch && $doesCallableMatch);
+		});
+	}
+
+	private function doesDataIncludeData($haystack, $keyValueNeedles)
+	{
+		return empty( array_diff( $keyValueNeedles, $haystack ) );
 	}
 }

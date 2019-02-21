@@ -11,7 +11,12 @@ class StubFilesystem extends Filesystem
 		return $this->handleCall(__FUNCTION__, func_get_args());
     }
 
-    public function deleteTree($dir)
+    public function deleteFolder($projectRelativePath)
+	{
+		return $this->handleCall(__FUNCTION__, func_get_args());
+	}
+
+	public function deleteTree($dir)
     {
         return $this->handleCall(__FUNCTION__, func_get_args());
     }
@@ -21,7 +26,12 @@ class StubFilesystem extends Filesystem
         return $this->handleCall(__FUNCTION__, func_get_args());
     }
 
-    public function makeTree($path)
+    public function makeDir($path)
+	{
+		return $this->handleCall(__FUNCTION__, func_get_args());
+	}
+
+	public function makeTree($path)
     {
         return $this->handleCall(__FUNCTION__, func_get_args());
     }
@@ -50,6 +60,20 @@ class StubFilesystem extends Filesystem
 
 		$this->setMappedReturnValues("getFile", [
 			[THEMEVIZ_THEME_PATH . "/theme.conf", $themeConfJson]
+		]);
+	}
+
+	public function loadMinimalComponentsFile()
+	{
+		$this->loadComponentsFile([
+			"screens" => [
+				[
+					"path" => "path/to/file.twig",
+					"scenarios" => [
+						"ScenarioName" => []
+					]
+				]
+			]
 		]);
 	}
 

@@ -26,7 +26,7 @@ final class TestBuild extends ThemeViz\TestCase
 
 		$this->mockFilesystem->assertMethodCalledWith(
 			"deleteTree",
-			THEMEVIZ_BASE_PATH . "/build/head"
+			"build/head"
 		);
 	}
 

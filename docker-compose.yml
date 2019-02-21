@@ -5,3 +5,4 @@ services:
       context: .
     volumes:
       - ".:/app"
+      - "~/.ssh/id_rsa:/root/.ssh/id_rsa"

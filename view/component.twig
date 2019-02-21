@@ -1,10 +1,10 @@
 <html class="{% if themeviz_use_bootstrap %}su_bootstrap_safe {% endif %}{{ themeviz_wrapper_classes }}">
 <head>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="{{ themeviz_base_path }}/third-party/iframe-resizer/js/iframeResizer.contentWindow.min.js"></script>
+    <script src="../../../../third-party/iframe-resizer/js/iframeResizer.contentWindow.min.js"></script>
     {% if themeviz_use_bootstrap %}
         <link rel="stylesheet" href="{{ themeviz_base_path }}/third-party/bootstrap-3.3.5/dist/css/bootstrap.min.css">
-        <script src="{{ themeviz_base_path }}/third-party/bootstrap-3.3.5/dist/js/bootstrap.min.js"></script>
+        <script src="../../../../third-party/bootstrap-3.3.5/dist/js/bootstrap.min.js"></script>
     {% endif %}
 	<link rel="stylesheet" href="{{ themeviz_css_href }}">
     <style>

@@ -47,12 +47,12 @@ class App
      */
     public function compile()
     {
-        $this->filesystem->deleteTree(THEMEVIZ_BASE_PATH . "/build");
+        $this->filesystem->deleteTree("build");
 		$this->runBuild("head");
-		$this->styleGuide->save();
 		$this->buildProduction();
         $this->differ->buildDiffs();
         $this->summary->save();
+		$this->styleGuide->save();
     }
 
 	public function buildStyleGuide()
@@ -63,18 +63,23 @@ class App
 
 	public function buildProduction()
 	{
-		$this->git->saveState(THEMEVIZ_THEME_PATH);
-		$this->git->checkoutRemoteBranch(THEMEVIZ_THEME_PATH, "production");
-		$this->git->pull(THEMEVIZ_THEME_PATH, "production");
+		$this->cloneProductionBranch();
 		$this->runBuild("production");
-		$this->git->resetState(THEMEVIZ_THEME_PATH);
+	}
+
+	private function cloneProductionBranch(): void
+	{
+		$this->filesystem->deleteFolder("tmp");
+		$this->filesystem->makeDir(THEMEVIZ_BASE_PATH . "/tmp");
+		$remoteUrl = $this->git->getRemoteUrl(THEMEVIZ_THEME_PATH);
+		$this->git->clone($remoteUrl, THEMEVIZ_BASE_PATH . "/tmp");
 	}
 
 	/**
 	 * @param $buildName
 	 */
-    private function runBuild($buildName): void
-    {
+	private function runBuild($buildName): void
+	{
 		$this->buildFactory->makeBuild($buildName)->run();
-    }
+	}
 }

@@ -45,11 +45,9 @@ class Build {
 
 	public function run()
 	{
-		$buildPath = THEMEVIZ_BASE_PATH . "/build/$this->name";
-		$this->filesystem->deleteTree($buildPath);
+		$this->filesystem->deleteTree("build/$this->name");
 		$this->saveStylesheet();
 		$this->compileScenarios();
-		$this->photographer->photographComponents("$buildPath/html", "$buildPath/shots");
 		$this->saveCssAnalysis();
 	}
 
@@ -64,7 +62,7 @@ class Build {
 		$components = $this->componentFactory->getComponents();
 
 		array_walk($components, function (Component $component) {
-			$component->compileScenarios($this->name);
+			$component->saveScenariosToDisk($this->name);
 		});
 	}
 

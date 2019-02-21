@@ -44,6 +44,19 @@ class Component
 		$this->twig = $twig;
 	}
 
+	/**
+	 * @return mixed
+	 */
+	public function getScenarios()
+	{
+		return $this->scenarios;
+	}
+
+	public function getName()
+	{
+		return $this->sourcePath;
+	}
+
 	protected function getDataArray()
 	{
 		return [];
@@ -65,51 +78,42 @@ class Component
 	 */
 	public function setScenarios($scenarios)
 	{
-		$this->scenarios = $scenarios;
+		$keys = array_keys($scenarios ?? []);
+
+		$this->scenarios = array_map(function($key) use ($scenarios) {
+			$data = $this->prepareScenarioData($scenarios[$key]);
+
+			/** @var Scenario $scenario */
+			return $this->factory->make("File\\TwigFile\\Scenario")
+				->setName($key)
+				->setScenarioData($data);
+		}, $keys);
+
 		return $this;
 	}
 
-	public function compileScenarios($buildName)
+	public function saveScenariosToDisk($buildName)
 	{
-		$scenarios = $this->getScenarios();
-
-		return array_walk(array_keys($scenarios), function ($key) use($scenarios, $buildName) {
-			$scenarioName = $key;
-			$scenario = $scenarios[$key];
-
-			$data = $this->dataFactory->makeData($scenario);
-
-			/** @var Scenario $scenario */
-			$scenario = $this->factory->make("File\\TwigFile\\Scenario");
-			$scenario->setName($scenarioName);
-			$scenario->setScenarioData($data);
-			$scenario->setBuildName($buildName);
-			$scenario->save();
+		$scenarios = $this->scenarios ?? [];
+		return array_walk($scenarios, function ($scenario) use($buildName) {
+			$scenario->setBuildName($buildName)->save();
 		});
 	}
 
-	/**
-	 * @return mixed
-	 */
-	private function getScenarios()
-	{
-		$defaultScenario = [];
-		$scenarios = $this->scenarios ?: [$defaultScenario];
-
-		return array_map(function ($scenario) {
-			return $this->getScenarioData($scenario);
-		}, $scenarios);
+	private function prepareScenarioData($scenarioData) {
+		$scenarioData = $this->addBaseData($scenarioData);
+		return $this->dataFactory->makeData($scenarioData);
 	}
 
 	/**
-	 * @param $scenario
+	 * @param $scenarioData
 	 * @return array
 	 */
-	private function getScenarioData($scenario)
+	private function addBaseData($scenarioData)
 	{
 		return array_merge_recursive(
 			$this->getBaseData(),
-			$scenario
+			$scenarioData
 		);
 	}
 

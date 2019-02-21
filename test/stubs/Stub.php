@@ -176,10 +176,20 @@ trait Stub
     {
         $calls = $this->getCalls($method);
         $bool = array_reduce($calls, $callable, FALSE);
-        $haystackExport = var_export($calls, TRUE);
+        $haystackExport = $this->export($calls);
         $message = ($message) ? $message : "Failed asserting any call matches callback.\r\n\r\nHaystack:\r\n$haystackExport";
         $this->testCase->assertTrue($bool, $message);
     }
+
+    private function export($data)
+	{
+		return "Data export disabled";
+//		try {
+//			return var_export($data, TRUE);
+//		} catch (\Exception $e ) {
+//			return "Failed to export.";
+//		}
+	}
 
     /**
      * @param string $method

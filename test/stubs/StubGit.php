@@ -30,4 +30,14 @@ class StubGit extends Git
     {
         return $this->handleCall(__FUNCTION__, func_get_args());
     }
+
+    public function getRemoteUrl($path)
+	{
+		return $this->handleCall(__FUNCTION__, func_get_args());
+	}
+
+	public function clone($remoteUrl, $destinationDir, $branch = "production")
+	{
+		return $this->handleCall(__FUNCTION__, func_get_args());
+	}
 }

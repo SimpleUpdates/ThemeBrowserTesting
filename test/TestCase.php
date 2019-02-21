@@ -67,7 +67,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
     protected function loadMinimalComponentsFile(): void
     {
-        $this->loadComponentsFileFromArrays($this->minimalComponentsFile);
+        $this->mockFilesystem->loadMinimalComponentsFile();
     }
 
     /**

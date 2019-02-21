@@ -7,6 +7,11 @@ use ThemeViz\File\ConfigFile;
 
 class ComponentsFile extends ConfigFile
 {
+	public function getRawComponents()
+	{
+		return $this->getContents()["screens"] ?? [];
+	}
+
 	public function getContents()
 	{
 		return $this->getCachedDecodedJsonFile(

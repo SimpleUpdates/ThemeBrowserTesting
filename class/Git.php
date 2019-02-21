@@ -7,6 +7,21 @@ class Git
     private $originalBranch;
     private $didStash;
 
+    public function getRemoteUrl($path)
+	{
+		$out = $this->exec("cd $path; git remote get-url origin");
+
+		return $out[0];
+	}
+
+	public function clone($remoteUrl, $destinationDir, $branch = "production") {
+		if (!(realpath($destinationDir))) {
+			throw new \Exception("Could not resolve destination directory");
+		}
+
+    	$this->exec("cd $destinationDir; git clone --recurse-submodules -j8 -b $branch --single-branch --depth 1 $remoteUrl .");
+	}
+
     public function saveState($path)
     {
         $this->originalBranch = $this->getBranch($path);

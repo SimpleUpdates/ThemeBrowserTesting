@@ -24,21 +24,20 @@ class ComponentFactory
 
 	/**
 	 * @return array
-	 * @throws \Less_Exception_Parser
 	 * @throws \Exception
 	 */
 	public function getComponents()
 	{
-		$screens = $this->componentsFile->getContents()["screens"] ?? [];
+		$rawComponents = $this->componentsFile->getRawComponents();
 
-		return array_map(function($screen) {
+		return array_map(function($rawComponent) {
 			/** @var Component $component */
 			$component = $this->factory->make("Component");
 
-			$component->setSourcePath($screen["path"]);
-			$component->setScenarios($screen["scenarios"]);
+			$component->setSourcePath($rawComponent["path"]);
+			$component->setScenarios($rawComponent["scenarios"]);
 
 			return $component;
-		}, $screens);
+		}, $rawComponents);
 	}
 }

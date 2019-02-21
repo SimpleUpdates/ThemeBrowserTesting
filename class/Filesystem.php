@@ -11,9 +11,62 @@ class Filesystem
         return file_get_contents($path);
     }
 
-    public function deleteTree($dir)
+    public function deleteFolder($projectRelativePath)
+	{
+		if (!$projectRelativePath) {
+			throw new \Exception("Directory path required");
+		}
+
+		if (!THEMEVIZ_BASE_PATH) {
+			throw new \Exception("Basedir not defined");
+		}
+
+		$realPath = realpath( THEMEVIZ_BASE_PATH . "/$projectRelativePath");
+
+		if (!$realPath) {
+			return false;
+		}
+
+		if (substr($realPath, 0, strlen(THEMEVIZ_BASE_PATH)) !== THEMEVIZ_BASE_PATH) {
+			throw new \Exception("Specified directory not inside basedir");
+		}
+
+		$result = system("rm -r $realPath");
+
+		if ($result === false) {
+			throw new \Exception("Failed to delete directory");
+		}
+
+		return $result;
+	}
+
+    public function deleteTree($projectRelativePath)
     {
-        return system("rm -r $dir/*");
+		if (!$projectRelativePath) {
+			throw new \Exception("Directory path required");
+		}
+
+		if (!THEMEVIZ_BASE_PATH) {
+			throw new \Exception("Basedir not defined");
+		}
+
+		$realPath = realpath( THEMEVIZ_BASE_PATH . "/$projectRelativePath");
+
+		if (!$realPath) {
+			return false;
+		}
+
+		if (substr($realPath, 0, strlen(THEMEVIZ_BASE_PATH)) !== THEMEVIZ_BASE_PATH) {
+			throw new \Exception("Specified directory not inside basedir");
+		}
+
+        $result = system("rm -r $realPath/*");
+
+		if ($result === false) {
+			throw new \Exception("Failed to delete directory");
+		}
+
+		return $result;
     }
 
     public function fileForceContents($path, $contents)
@@ -44,7 +97,7 @@ class Filesystem
 
     public function scanDir($path)
     {
-        return array_diff(scandir($path), ["..","."]);
+    	return array_diff(scandir($path), ["..","."]);
     }
 
     public function isDir($path)
