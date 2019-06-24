@@ -47,8 +47,8 @@ RUN npm install -g \
     doiuse \
     pixelmatch
 
-RUN git config --global user.email "nathan@simpleupdates.com"
-RUN git config --global user.name "Nathan Arthur"
+RUN git config --global user.email "carl@simpleupdates.com"
+RUN git config --global user.name "Carl Brugger"
 
 # Locally /app is re-mounted as a volume. In CI, a volume is not used.
 COPY . /app
